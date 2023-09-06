@@ -12,7 +12,7 @@
 	<groupId>net.spikesync</groupId>
 	<artifactId>pingerdaemon-rabbitmq-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pingerdeamon-rabbitmq-client</name>
+	<name>pingerdaeomon-rabbitmq-client</name>
 	<description>VM SilverCloud pinger with RabbitMQ CLient</description>
 	<properties>
 		<java.version>17</java.version>
@@ -29,7 +29,7 @@
 
 
 
-<!-- nog eens proberen de dependencies goed te krijgen 5-9-2023 14:10u
+<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
@@ -41,20 +41,30 @@
 			<artifactId>spring-rabbit</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
-  -->
  
-<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit -->
-<dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-rabbit</artifactId>
-    <version>3.0.8</version>
-</dependency>
+ 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+			<version>2.2.1.RELEASE</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-amqp -->
+
+<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback -->
+
 <dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-amqp</artifactId>
-    <version>3.0.8</version>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.7</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.7</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-slf4j-impl</artifactId>
+    <version>2.7</version>
 </dependency>
 
 		<!--
@@ -71,27 +81,14 @@
 			<artifactId>spring-rabbit</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
--->
-		<!-- SLF4J This is an interface -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.25</version>
-		</dependency>
-
-		<!-- This is the implementation of the SLF4J interface -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.2.11</version>
-		</dependency>
-
+		-->
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

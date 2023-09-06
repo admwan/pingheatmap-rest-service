@@ -12,7 +12,7 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 	http://www.springframework.org/schema/rabbit https://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
-	<bean id="silverCloud" class="net.spikesync.pingerdeamonrabbitmqclient.SilverCloud">
+	<bean id="silverCloud" class="net.spikesync.pingerdaemonrabbitmqclient.SilverCloud">
 		<constructor-arg ref="scNodeIpMap" />
 	</bean>
 

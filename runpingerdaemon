@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.mainClass="net.spikesync.pingerdeamonrabbitmqclient.PingerdeamonRabbitmqClientApplication"
+mvn exec:java -Dexec.mainClass="net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication"

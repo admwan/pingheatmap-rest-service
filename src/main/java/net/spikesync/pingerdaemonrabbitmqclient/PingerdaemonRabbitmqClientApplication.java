@@ -1,4 +1,4 @@
-package net.spikesync.pingerdeamonrabbitmqclient;
+package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.util.Collections;
 
@@ -14,9 +14,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 
-public class PingerdeamonRabbitmqClientApplication {
+public class PingerdaemonRabbitmqClientApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(PingerdeamonRabbitmqClientApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
     private static final String QUEUE_NAME = "SilverSurfieRMQHpingQueue";
    // private static final CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
     private AmqpAdmin admin;
@@ -27,7 +27,7 @@ public class PingerdeamonRabbitmqClientApplication {
     @Autowired
     private SilverCloud sc;
 
-    private PingerdeamonRabbitmqClientApplication() {
+    private PingerdaemonRabbitmqClientApplication() {
     	
     	this.context = new GenericXmlApplicationContext("classpath:beans.xml");
     	this.admin = context.getBean(RabbitAdmin.class);
@@ -37,7 +37,7 @@ public class PingerdeamonRabbitmqClientApplication {
     }
 	public static void main(String[] args) {
 		logger.info("Starting PingerdaemonRabbitmqClientApplication");
-		PingerdeamonRabbitmqClientApplication pingDaemonApp = new PingerdeamonRabbitmqClientApplication();
+		PingerdaemonRabbitmqClientApplication pingDaemonApp = new PingerdaemonRabbitmqClientApplication();
 		pingDaemonApp.run(args);
 	}
 	

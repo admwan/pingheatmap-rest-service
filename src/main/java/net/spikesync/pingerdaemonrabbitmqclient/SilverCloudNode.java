@@ -1,4 +1,4 @@
-package net.spikesync.pingerdeamonrabbitmqclient;
+package net.spikesync.pingerdaemonrabbitmqclient;
 
 public class SilverCloudNode {
 	

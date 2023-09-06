@@ -1,4 +1,4 @@
-package net.spikesync.pingerdeamonrabbitmqclient;
+package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 public class SilverCloud {
 
-    private static final Logger logger = LoggerFactory.getLogger(PingerdeamonRabbitmqClientApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
 
 	private ArrayList<SilverCloudNode> scNodes;
 
