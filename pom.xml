@@ -49,39 +49,32 @@
 		</dependency>
 
 
-<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback -->
+<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
+	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
-    <version>2.7</version>
+    <version>2.20.0</version>
 </dependency>
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
-    <version>2.7</version>
+    <version>2.20.0</version>
 </dependency>
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-slf4j-impl</artifactId>
-    <version>2.7</version>
+    <version>2.20.0</version>
 </dependency>
 
-		<!--
-		https://mvnrepository.com/artifact/org.springframework.amqp/spring-amqp 
-		<dependency> 
-			<groupId>org.springframework.amqp</groupId>
-			<artifactId>spring-amqp</artifactId>
-			<version>3.0.8</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.springframework.amqp</groupId>
-			<artifactId>spring-rabbit</artifactId>
-			<version>2.2.1.RELEASE</version>
-		</dependency>
-		-->
+<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
+<dependency>
+    <groupId>org.springframework.amqp</groupId>
+    <artifactId>spring-rabbit-test</artifactId>
+    <version>3.0.8</version>
+    <scope>test</scope>
+</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

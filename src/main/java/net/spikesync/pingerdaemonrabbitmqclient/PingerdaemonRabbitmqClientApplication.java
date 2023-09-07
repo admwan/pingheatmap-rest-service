@@ -36,9 +36,12 @@ public class PingerdaemonRabbitmqClientApplication {
 
     }
 	public static void main(String[] args) {
-		logger.info("Starting PingerdaemonRabbitmqClientApplication");
+		logger.debug("******************* Starting PingerdaemonRabbitmqClientApplication ******************* ");
 		PingerdaemonRabbitmqClientApplication pingDaemonApp = new PingerdaemonRabbitmqClientApplication();
-		pingDaemonApp.run(args);
+		
+		
+		
+		//pingDaemonApp.run(args);
 	}
 	
 	public void run(String... args) {
