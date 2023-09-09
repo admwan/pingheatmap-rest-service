@@ -31,9 +31,9 @@ public class PingerdaemonRabbitmqClientApplication {
 	
 	private AmqpAdmin admin;
 	private AmqpTemplate template;
-	@Autowired
 	private ApplicationContext context;
-    
+	private Queue rabbitMQ;
+	
     @Autowired
     private SilverCloud sc;
 
@@ -42,7 +42,7 @@ public class PingerdaemonRabbitmqClientApplication {
     	
     	this.context = new GenericXmlApplicationContext("classpath:beans.xml");
     	this.admin = context.getBean(RabbitAdmin.class);
-       	this.admin.declareQueue(new Queue(QUEUE_NAME));
+       	this.admin.declareQueue(new Queue(QUEUE_NAME, false, false, false, null));
         this.template = context.getBean(AmqpTemplate.class);
     }
     
@@ -51,7 +51,7 @@ public class PingerdaemonRabbitmqClientApplication {
     	
     	this.context = appCtx;
     	this.admin = context.getBean(RabbitAdmin.class);
-    	this.admin.declareQueue(new Queue(QUEUE_NAME));
+    	this.admin.declareQueue(new Queue(QUEUE_NAME, false, false, false, null));
     	this.template = context.getBean(AmqpTemplate.class);
     }
     
