@@ -42,8 +42,9 @@
 	connection-factory="connectionFactory" 
 	 />
 
+<!-- 
 	<rabbit:queue 
 	name="SilverSurfieRMQHpingQueue"
 	durable="false" />
-
+ -->
 </beans>

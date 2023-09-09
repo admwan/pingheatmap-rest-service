@@ -32,6 +32,7 @@ public class PingerdaemonRabbitmqClientApplication {
 	private AmqpAdmin admin;
 	private AmqpTemplate template;
 	private ApplicationContext context;
+	@Autowired
 	private Queue rabbitMQ;
 	
     @Autowired
@@ -42,8 +43,9 @@ public class PingerdaemonRabbitmqClientApplication {
     	
     	this.context = new GenericXmlApplicationContext("classpath:beans.xml");
     	this.admin = context.getBean(RabbitAdmin.class);
-       	this.admin.declareQueue(new Queue(QUEUE_NAME, false, false, false, null));
-        this.template = context.getBean(AmqpTemplate.class);
+    	this.admin.declareQueue(new Queue(QUEUE_NAME, false, false, false, null));
+//    	this.admin.declareQueue(this.rabbitMQ);
+    	this.template = context.getBean(AmqpTemplate.class);
     }
     
     //Constructor for use within other application (DevPing)
@@ -52,6 +54,7 @@ public class PingerdaemonRabbitmqClientApplication {
     	this.context = appCtx;
     	this.admin = context.getBean(RabbitAdmin.class);
     	this.admin.declareQueue(new Queue(QUEUE_NAME, false, false, false, null));
+    	// this.admin.declareQueue(this.rabbitMQ);
     	this.template = context.getBean(AmqpTemplate.class);
     }
     
