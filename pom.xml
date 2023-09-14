@@ -108,6 +108,22 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.7.0</version> -->
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>java</goal>
+							</goals>
+						</execution>
+					</executions>
+					<!-- the configuration element must be OUTSIDE the element executions!! -->
+					<configuration>
+						<mainClass>net.spikesync.PingMsgReader</mainClass>
+					</configuration>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>
