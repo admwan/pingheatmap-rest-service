@@ -6,13 +6,30 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class PingEntry {
+public class PingEntry implements Cloneable {
 
 	private SilverCloudNode pingOrig;
 	private SilverCloudNode pingDest;
 	private Date lastPingDate;
 	private int lastPingResult; // -1 means unkown, 0 means failed, 1 means succeeded
 	private int pingHeat; // -1 means unknown. scale pingheated: 0 means long time ago, 10 means recently heated (ping successful)
+
+	public static enum PINGRESULT { // Use this enum instead of integer codes.
+		PINGSUCCESS,
+		PINGFAILURE,
+		PINGUNKOWN
+	}
+	
+	public static enum PINGHEAT {
+		GLACIAL,
+		FRIGID,
+		CRISPY, 
+		TEPID,
+		SNUG,
+		TROPIC,
+		SCORCHING
+	}
+	
 
 	public int getPingHeat() {
 		return pingHeat;
