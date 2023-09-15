@@ -53,17 +53,18 @@ public class PingMsgReader {
 		 */
 	}
 
-	public PingMsgReader(PingHeatMap map) {
+/*	public PingMsgReader(PingHeatMap map) {
 		LOGGER.debug("****************** In constructor PingMsgReader(PingHeatMap map) **************");
-		/*
+		
 		 * SilverCloud sc = context.getBean(SilverCloud.class); String scNodeMapString =
 		 * ((HashMap) sc.getScNodeMap()).toString();
 		 * LOGGER.debug("obtained scNodeMap from SilverCloud with contents: " +
 		 * scNodeMapString);
-		 */
+	
 		this.pingHeatMap = map;
 	}
-
+	 */
+	
 	public static void main(String args[]) {
 		ApplicationContext context = new GenericXmlApplicationContext(
 				"classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
@@ -99,7 +100,7 @@ public class PingMsgReader {
 			System.exit(0);
 		}
 	}
-
+/*
 	public void updatePingHeatMap(ApplicationContext context) {
 
 		// String mockMsg = "Sat May 23 15:55:05 CEST
@@ -159,7 +160,9 @@ public class PingMsgReader {
 			}
 		}
 	}
+	*/
 
+	/*
 	private PingEntry parsePingMessageProperly(String pingQm) {
 
 		PingEntry pingEntry = new PingEntry();
@@ -198,11 +201,16 @@ public class PingMsgReader {
 		}
 		return pingEntry;
 	}
+*/
+
 
 	/*
 	 * This method both parses a message from String and writes it into the
 	 * PingerMatrix. Split it up into parsing and writing methods.
 	 */
+
+	
+	/*
 	private void parsePingMessage(String pingQM) {
 
 		LOGGER.info(" [x] Received '" + pingQM + "'");
@@ -245,7 +253,7 @@ public class PingMsgReader {
 			 * Queue. int lastPingResult; CHANGE to the value of the message in the Ping
 			 * Message Queue. int pingHeat; CHANGE according to the 'heat' algorithm
 			 * 
-			 */
+			 
 
 			// Determining the success of the ping and the values to update the pingHeatMap
 			// with ...
@@ -285,6 +293,7 @@ public class PingMsgReader {
 				LOGGER.error("Ping Entry for source: " + pe.getPingOrig() + " and destination: " + pe.getPingDest()
 						+ " does not exist! Check if nodes in silvercloud-context.xml exist!!");
 			}
-		}
+		} 
+		*/
 	}
-}
+

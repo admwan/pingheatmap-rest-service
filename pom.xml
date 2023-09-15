@@ -87,11 +87,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.howtodoinjava</groupId>
-			<artifactId>spring-webflux-demo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -120,7 +115,7 @@
 					</executions>
 					<!-- the configuration element must be OUTSIDE the element executions!! -->
 					<configuration>
-						<mainClass>net.spikesync.PingMsgReader</mainClass>
+						<mainClass>net.spikesync.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
 
