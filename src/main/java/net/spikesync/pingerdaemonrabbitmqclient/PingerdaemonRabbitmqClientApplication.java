@@ -21,11 +21,14 @@ public class PingerdaemonRabbitmqClientApplication {
     private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
 	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
 	private SilverCloud sc;
+	private PingMsgReader msgR;
     
     public static void main(String[] args) {
     	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication();
         RabbitAdmin ra = devPingApp.context.getBean(RabbitAdmin.class);
         devPingApp.sc = devPingApp.context.getBean(SilverCloud.class);
+        devPingApp.msgR = devPingApp.context.getBean(PingMsgReader.class);
+        logger.debug("\n***************************\n************************ PingMessageReader instance: " + devPingApp.msgR + "\n***********************");
         logger.debug("SilverCloud: " + devPingApp.sc.getScNodes());
     	logger.info("Starting DevPingApplication");
         devPingApp.run(args);
@@ -38,6 +41,8 @@ public class PingerdaemonRabbitmqClientApplication {
         for (int i = 0; i < args.length; ++i) {
             logger.info("args[{}]: {}", i, args[i]);
         }
+        
+        
     }
 }
 

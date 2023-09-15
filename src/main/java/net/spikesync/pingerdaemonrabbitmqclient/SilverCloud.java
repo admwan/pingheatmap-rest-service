@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
+import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
+
 public class SilverCloud {
 
     private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);

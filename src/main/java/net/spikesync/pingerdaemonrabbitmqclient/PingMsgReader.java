@@ -43,16 +43,22 @@ public class PingMsgReader {
 	 * "classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
 	 */
 
-	public PingMsgReader() {
+	
+	public PingMsgReader(SilverCloud sc, AmqpTemplate template) {
+		
+	}
+	
+	
+/*	public PingMsgReader() {
 		LOGGER.debug("****************** In default constructor PingMsgReader **************");
 		/*
 		 * SilverCloud sc = context.getBean(SilverCloud.class); String scNodeMapString =
 		 * ((HashMap) sc.getScNodeMap()).toString();
 		 * LOGGER.debug("obtained scNodeMap from SilverCloud with contents: " +
 		 * scNodeMapString);
-		 */
 	}
-
+	 */
+	
 /*	public PingMsgReader(PingHeatMap map) {
 		LOGGER.debug("****************** In constructor PingMsgReader(PingHeatMap map) **************");
 		
@@ -69,7 +75,8 @@ public class PingMsgReader {
 		ApplicationContext context = new GenericXmlApplicationContext(
 				"classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
 		SilverCloud sc = context.getBean(SilverCloud.class);
-		PingMsgReader msgR = new PingMsgReader();
+		AmqpTemplate amqp = context.getBean(AmqpTemplate.class);
+		PingMsgReader msgR = new PingMsgReader(sc,amqp);
 		msgR.connectPingMQ(context);
 
 	}
