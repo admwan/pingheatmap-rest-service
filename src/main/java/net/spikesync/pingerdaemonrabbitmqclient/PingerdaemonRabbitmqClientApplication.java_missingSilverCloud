@@ -4,14 +4,11 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
 @EnableAutoConfiguration
 @Configuration
@@ -19,14 +16,12 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 public class PingerdaemonRabbitmqClientApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
-	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
-	private SilverCloud sc;
+
+    @Autowired
+    private SilverCloud sc;
     
     public static void main(String[] args) {
     	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication();
-        RabbitAdmin ra = devPingApp.context.getBean(RabbitAdmin.class);
-        devPingApp.sc = devPingApp.context.getBean(SilverCloud.class);
-        logger.debug("SilverCloud: " + devPingApp.sc.getScNodes());
     	logger.info("Starting DevPingApplication");
         devPingApp.run(args);
     }

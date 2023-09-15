@@ -115,7 +115,8 @@
 					</executions>
 					<!-- the configuration element must be OUTSIDE the element executions!! -->
 					<configuration>
-						<mainClass>net.spikesync.PingerdaemonRabbitmqClientApplication</mainClass>
+<!--						<mainClass>net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader</mainClass> -->
+						<mainClass>net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
 
