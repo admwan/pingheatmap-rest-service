@@ -29,7 +29,8 @@ public class PingMsgReader {
 
 	String vHostQueueName = null;
 
-	private AmqpTemplate template;
+	private SilverCloud silverCloud;
+	private AmqpTemplate amqpTemplate;
 
 	//private PingHeatMap pingHeatMap;
 
@@ -45,9 +46,17 @@ public class PingMsgReader {
 
 	
 	public PingMsgReader(SilverCloud sc, AmqpTemplate template) {
-		
+		this.silverCloud = sc;
+		this.amqpTemplate = template;
 	}
 	
+	public SilverCloud getSilverCloud() {
+		return this.silverCloud;
+	}
+	
+	public AmqpTemplate getAmqpTemplate() {
+		return this.amqpTemplate;
+	}
 	
 /*	public PingMsgReader() {
 		LOGGER.debug("****************** In default constructor PingMsgReader **************");
@@ -95,9 +104,9 @@ public class PingMsgReader {
 			vHostQueueName = rabbitMQ.getName();
 			channel.queueDeclare(vHostQueueName, false, false, false, null);
 
-			this.template = context.getBean(AmqpTemplate.class);
+			this.amqpTemplate = context.getBean(AmqpTemplate.class);
 
-			if (this.template == null) {
+			if (this.amqpTemplate == null) {
 				LOGGER.error(
 						"Could not instantiate AmqpTemplate in PingMsgReader!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
 			}

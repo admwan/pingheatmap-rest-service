@@ -16,4 +16,9 @@ public class SilverCloudNode {
 	public String getIpAddress() {
 		return this.ipAddress;
 	}
+	
+	@Override
+	public String toString() {
+		return("(" + this.nodeName + ", " + this.ipAddress +")");
+	}
 }
