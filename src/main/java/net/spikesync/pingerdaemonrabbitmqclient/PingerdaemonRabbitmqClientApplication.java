@@ -1,18 +1,15 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
-import java.util.Collections;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+//The annotations below only work wit Spring Boot
+//@EnableAutoConfiguration
+//@Configuration
+//@ImportResource(value = { "classpath:beans.xml" })
 
 public class PingerdaemonRabbitmqClientApplication {
 
@@ -26,7 +23,9 @@ public class PingerdaemonRabbitmqClientApplication {
         RabbitAdmin ra = devPingApp.context.getBean(RabbitAdmin.class);
         devPingApp.sc = devPingApp.context.getBean(SilverCloud.class);
         devPingApp.msgR = devPingApp.context.getBean(PingMsgReader.class);
-        logger.debug("\n***************************\n************************ PingMessageReader instance: " + devPingApp.msgR + "\n***********************");
+        logger.debug("\n***************************"
+        		+ "\n************************ PingMessageReader instance: " + devPingApp.msgR 
+        		+ "\n***********************");
         logger.debug("SilverCloud: " + devPingApp.sc.getScNodes());
     	logger.info("Starting DevPingApplication");
         devPingApp.run(args);
@@ -38,9 +37,7 @@ public class PingerdaemonRabbitmqClientApplication {
         
         for (int i = 0; i < args.length; ++i) {
             logger.info("args[{}]: {}", i, args[i]);
-        }
-        
-        
+        }    
     }
 }
 
