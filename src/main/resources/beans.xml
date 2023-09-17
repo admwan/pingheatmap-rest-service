@@ -46,10 +46,11 @@
 	<rabbit:admin 
 	connection-factory="connectionFactory" 
 	 />
+	 
+	 <rabbit:queue 
+		id="SilvercloudQueue"
+		name="SilverSurfieRMQHpingQueue" 
+		durable="false" 
+	/>
 
-<!-- 
-	<rabbit:queue 
-	name="SilverSurfieRMQHpingQueue"
-	durable="false" />
--->
 </beans>

@@ -38,13 +38,16 @@ public class PingerdaemonRabbitmqClientApplication {
     }
 
     public void run(String... args) {
-        logger.info("SilverCloud nodes: "); 
-        this.sc.getScNodes().forEach(e -> logger.info(e.toString()));
+        logger.debug("SilverCloud nodes: "); 
+        this.sc.getScNodes().forEach(e -> logger.debug(e.toString()));
         logger.debug("EXECUTING : command line runner");
         
         for (int i = 0; i < args.length; ++i) {
             logger.info("args[{}]: {}", i, args[i]);
         }    
+        
+        logger.debug("Not starting listener with devPingApp..connectPingMQ(context) --------------------**********");
+        this.pingMsgReader.connectPingMQ(context);
     }
 }
 
