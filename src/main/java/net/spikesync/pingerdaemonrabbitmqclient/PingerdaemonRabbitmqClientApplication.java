@@ -46,7 +46,7 @@ public class PingerdaemonRabbitmqClientApplication {
             logger.info("args[{}]: {}", i, args[i]);
         }    
         
-        logger.debug("Not starting listener with devPingApp..connectPingMQ(context) --------------------**********");
+        logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
         this.pingMsgReader.connectPingMQ(context);
     }
 }
