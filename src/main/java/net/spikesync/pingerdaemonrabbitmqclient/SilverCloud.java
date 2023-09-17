@@ -20,7 +20,7 @@ public class SilverCloud {
 		this.scNodes = new ArrayList<SilverCloudNode>();
 			scN.forEach((key, value) -> {
 				scNodes.add(new SilverCloudNode(key,value));
-				logger.info("Created SilverCloudeNode: (" + key + ", " + value + "), and added to ArrayList scNodes");
+				logger.debug("Created SilverCloudeNode: (" + key + ", " + value + "), and added to ArrayList scNodes");
 				});
 		}
 	

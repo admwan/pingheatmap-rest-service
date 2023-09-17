@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConnectionFactory;
 
 public class PingMsgReader {
 
@@ -27,27 +28,17 @@ public class PingMsgReader {
 	Channel channel = null;
 	Queue rabbitMQ = null;
 
-	String vHostQueueName = null;
-
 	private SilverCloud silverCloud;
 	private AmqpTemplate amqpTemplate;
-
+	// PingHeatMap MOET IK TOEVOEGEN ALS BEAN VOOR PingMsgReader! 
 	//private PingHeatMap pingHeatMap;
 
-	/*
-	 * Als dit wordt uitgevoerd komt Spring weer in een loop van bean initialisatie
-	 * terecht, dus dat kan niet. Hoe moet ik GVD dan aan die ApplicationContext
-	 * komen??
-	 */
-	/*
-	 * private ApplicationContext context = new GenericXmlApplicationContext(
-	 * "classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
-	 */
-
 	
-	public PingMsgReader(SilverCloud sc, AmqpTemplate template) {
+	public PingMsgReader(SilverCloud sc, AmqpTemplate template, CachingConnectionFactory fact, Queue rq) {
 		this.silverCloud = sc;
 		this.amqpTemplate = template;
+		this.factory = fact;
+		this.rabbitMQ = rq;
 	}
 	
 	public SilverCloud getSilverCloud() {
@@ -58,51 +49,48 @@ public class PingMsgReader {
 		return this.amqpTemplate;
 	}
 	
-/*	public PingMsgReader() {
-		LOGGER.debug("****************** In default constructor PingMsgReader **************");
-		/*
-		 * SilverCloud sc = context.getBean(SilverCloud.class); String scNodeMapString =
-		 * ((HashMap) sc.getScNodeMap()).toString();
-		 * LOGGER.debug("obtained scNodeMap from SilverCloud with contents: " +
-		 * scNodeMapString);
-	}
-	 */
-	
-/*	public PingMsgReader(PingHeatMap map) {
-		LOGGER.debug("****************** In constructor PingMsgReader(PingHeatMap map) **************");
-		
-		 * SilverCloud sc = context.getBean(SilverCloud.class); String scNodeMapString =
-		 * ((HashMap) sc.getScNodeMap()).toString();
-		 * LOGGER.debug("obtained scNodeMap from SilverCloud with contents: " +
-		 * scNodeMapString);
-	
-		this.pingHeatMap = map;
-	}
-	 */
-	
+
 	public static void main(String args[]) {
 		ApplicationContext context = new GenericXmlApplicationContext(
 				"classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
 		SilverCloud sc = context.getBean(SilverCloud.class);
 		AmqpTemplate amqp = context.getBean(AmqpTemplate.class);
-		PingMsgReader msgR = new PingMsgReader(sc,amqp);
+		CachingConnectionFactory cCfact = context.getBean(CachingConnectionFactory.class);
+		Queue rmq = context.getBean(Queue.class);
+		PingMsgReader msgR = new PingMsgReader(sc,amqp,cCfact,rmq);
 		msgR.connectPingMQ(context);
 
 	}
 
+	public void connectPingMQ() {
+		LOGGER.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
+		try {
+			this.connection = this.factory.createConnection();
+			this.channel = this.connection.createChannel(false);
+			this.channel.queueDeclare(this.rabbitMQ.getName(), false, false, false, null);				
+			if (this.amqpTemplate == null) {
+				LOGGER.error(
+						"Could not instantiate AmqpTemplate in PingMsgReader!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
+			}
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			System.exit(0);
+		}
+
+	}
+	
 	public void connectPingMQ(ApplicationContext context) {
 
 		CachingConnectionFactory factory = context.getBean(CachingConnectionFactory.class);
 		connection = null;
 		channel = null;
 		rabbitMQ = null;
-		vHostQueueName = null;
 		try {
 			this.connection = (Connection) factory.createConnection();
 			channel = (Channel) connection.createChannel(false);
 			rabbitMQ = context.getBean(Queue.class);
-			vHostQueueName = rabbitMQ.getName();
-			channel.queueDeclare(vHostQueueName, false, false, false, null);
+			channel.queueDeclare(rabbitMQ.getName(), false, false, false, null);
 
 			this.amqpTemplate = context.getBean(AmqpTemplate.class);
 
