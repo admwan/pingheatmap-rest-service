@@ -18,6 +18,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
+
 import org.junit.jupiter.api.condition.EnabledIf;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,16 +44,16 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	@Autowired
 	ApplicationContext context;
 	
-//	@Autowired
-//	private SilverCloudNode sc;
+	@Autowired
+	private SilverCloudNode sc;
 
 	@Value("${logging.level.net.spikesync}")
 	private String logginglevel;
-//	
+	
 	@Value("${test-silvercloud-scnodes}")
 	private String testingEnabled;
 
-//	@Test
+	@Test
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
 		logger.info("##################### Value of property logging.level.net.spikesync: "+ logginglevel);

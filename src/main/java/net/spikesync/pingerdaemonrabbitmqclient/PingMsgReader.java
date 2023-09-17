@@ -67,7 +67,8 @@ public class PingMsgReader {
 		try {
 			this.connection = this.factory.createConnection();
 			this.channel = this.connection.createChannel(false);
-			this.channel.queueDeclare(this.rabbitMQ.getName(), false, false, false, null);				
+			this.channel.queueDeclare(this.rabbitMQ.getName(), false, false, false, null);
+			// The test below should be moved to the test class. All the injected dependencies should be checked during testing, not here!
 			if (this.amqpTemplate == null) {
 				LOGGER.error(
 						"Could not instantiate AmqpTemplate in PingMsgReader!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
@@ -79,7 +80,7 @@ public class PingMsgReader {
 		}
 
 	}
-	
+
 	public void connectPingMQ(ApplicationContext context) {
 
 		CachingConnectionFactory factory = context.getBean(CachingConnectionFactory.class);
