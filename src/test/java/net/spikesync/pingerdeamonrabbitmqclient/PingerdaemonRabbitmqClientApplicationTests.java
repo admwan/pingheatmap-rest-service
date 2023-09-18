@@ -58,7 +58,7 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	
 	private Properties prop;
 
-	public PingerdaemonRabbitmqClientApplicationTests() {
+	public PingerdaemonRabbitmqClientApplicationTests() { //Constructor in which the properties files is read.
  		prop = PropertiesLoader.loadProperties();
 	}
 	
