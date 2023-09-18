@@ -14,15 +14,13 @@ public class PingerdaemonRabbitmqClientApplication {
     private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
 	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
 	private PingMsgReader pingMsgReader;
-	private PropertiesLoader propLoader;
     
     public static void main(String[] args) {
     	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication();
     	devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
-//    	devPingApp.propLoader = devPingApp.context.getBean(PropertiesLoader.class);
  		Properties prop = PropertiesLoader.loadProperties();
  		if(prop == null) 
- 			logger.debug("************** ========= Properties not loaded! Check the name of the properties file!");
+ 			logger.debug("************** ========= Properties not loaded! Check the name of the properties file! ************** ========= ");
  		else 
  			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
         devPingApp.run(args);

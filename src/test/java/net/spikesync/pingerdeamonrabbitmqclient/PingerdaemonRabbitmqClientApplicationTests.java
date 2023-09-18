@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
 import org.junit.jupiter.api.condition.EnabledIf;
@@ -26,15 +27,17 @@ import org.junit.jupiter.api.condition.EnabledIf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import java.util.Properties;
+
 //@ImportResource("beans.xml")
 //@SpringBootTest(classes = PingerdaemonRabbitmqClientApplication.class)
 //@ComponentScan
 //@RunWith(SpringJUnit4ClassRunner.class)
 
-@ExtendWith(SpringExtension.class)
+//@ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
-@RabbitListenerTest
-@SpringJUnitConfig
+//@RabbitListenerTest
+//@SpringJUnitConfig
 //@SpringRabbitTest
 class PingerdaemonRabbitmqClientApplicationTests {
 
@@ -52,11 +55,18 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	
 	@Value("${test-silvercloud-scnodes}")
 	private String testingEnabled;
+	
+	private Properties prop;
 
+	public PingerdaemonRabbitmqClientApplicationTests() {
+ 		prop = PropertiesLoader.loadProperties();
+	}
+	
 	@Test
-	@EnabledIf("testingEnabled")
+//	@EnabledIf("testingEnabled")
 	void contextLoads() {
-		logger.info("##################### Value of property logging.level.net.spikesync: "+ logginglevel);
+		logger.info("##################### Value of property test-silvercloud-scnodes: "+ testingEnabled);
+		logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
 		
 		if(context!=null)
 			logger.info("**************** AutowiredCapableBeanFactory: " + context.toString());
