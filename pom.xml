@@ -99,9 +99,6 @@
 					<configuration>
 						<release>11</release>
 					</configuration>
-					<!-- <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version> -->
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -115,7 +112,6 @@
 					</executions>
 					<!-- the configuration element must be OUTSIDE the element executions!! -->
 					<configuration>
-<!--						<mainClass>net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader</mainClass> -->
 						<mainClass>net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
