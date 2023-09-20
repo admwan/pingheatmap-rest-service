@@ -1,6 +1,7 @@
 package net.spikesync.pingerdeamonrabbitmqclient;
 
 import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
@@ -25,11 +27,11 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 import org.junit.jupiter.api.condition.EnabledIf;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.Properties;
-
-//@ContextConfiguration("classpath:beans.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:beans.xml")
 //@RabbitListenerTest
 //@SpringJUnitConfig
 //@SpringRabbitTest
@@ -37,6 +39,7 @@ class PingerdaemonRabbitmqClientApplicationTests {
 
  	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplicationTests.class);
 
+ 	@Autowired
 	private ApplicationContext context;
 	private SilverCloudNode sc;
 
