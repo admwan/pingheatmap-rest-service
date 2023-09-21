@@ -1,11 +1,14 @@
 package net.spikesync.pingerdeamonrabbitmqclient;
 
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.amqp.rabbit.test.RabbitListenerTest;
 import org.springframework.amqp.rabbit.test.context.SpringRabbitTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +18,30 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ContextConfiguration;
-
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
 import org.junit.jupiter.api.condition.EnabledIf;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Properties;
-//@RunWith(SpringJUnit4ClassRunner.class)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:beans.xml")
+
 //@RabbitListenerTest
 //@SpringJUnitConfig
 //@SpringRabbitTest
+@ExtendWith(SpringExtension.class)
+@TestExecutionListeners(value = {
+		  CustomTestExecutionListener.class,
+		  DependencyInjectionTestExecutionListener.class
+		})
+@ContextConfiguration("classpath:beans.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
 class PingerdaemonRabbitmqClientApplicationTests {
 
  	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplicationTests.class);
@@ -49,6 +56,11 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	private String testingEnabled;
 	private Properties prop;
 
+	@BeforeClass
+	static void setTestsConfigurations() {
+	//	   TestConfiguration.setup(false);		
+	}
+	
 	public PingerdaemonRabbitmqClientApplicationTests() { //Constructor in which the properties files is read.
  		prop = PropertiesLoader.loadProperties();
  		this.testingEnabled = prop.getProperty(TEST_PROPERTY);
