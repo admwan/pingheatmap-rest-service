@@ -1,9 +1,14 @@
 package net.spikesync.pingerdeamonrabbitmqclient;
 
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.runner.RunWith;
 
 import org.slf4j.Logger;
@@ -56,8 +61,28 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	private String testingEnabled;
 	private Properties prop;
 
+	 @BeforeAll //From digitalocean Junit 5 tutorial
+	  static void beforeAll() {
+	    System.out.println("**--- Executed once before all test methods in this class ---**");
+	  }
+
+	  @BeforeEach //From digitalocean Junit 5 tutorial
+	  void beforeEach() {
+	    System.out.println("**--- Executed before each test method in this class ---**");
+	  }
+	  @AfterEach //From digitalocean Junit 5 tutorial
+	  void afterEach() {
+	    System.out.println("**--- Executed after each test method in this class ---**");
+	  }
+
+	  @AfterAll //From digitalocean Junit 5 tutorial
+	  static void afterAll() {
+	    System.out.println("**--- Executed once after all test methods in this class ---**");
+	  }
+  
+	  
 	@BeforeClass
-	static void setTestsConfigurations() {
+	static void setTestsConfigurations(ExtensionContext ctx) {
 	//	   TestConfiguration.setup(false);		
 	}
 	
