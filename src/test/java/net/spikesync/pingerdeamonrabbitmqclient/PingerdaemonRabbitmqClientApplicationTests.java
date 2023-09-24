@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +84,8 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	  
 	@BeforeClass
 	static void setTestsConfigurations(ExtensionContext ctx) {
-	//	   TestConfiguration.setup(false);		
+		 //  TestConfiguration.setup(false);	
+	
 	}
 	
 	public PingerdaemonRabbitmqClientApplicationTests() { //Constructor in which the properties files is read.
@@ -92,7 +94,8 @@ class PingerdaemonRabbitmqClientApplicationTests {
  		logger.debug("Value of test-pingerdaemon-context: " + this.testingEnabled);
 	}
 	
-	@Test
+	//@Test
+	//@Disabled("@EnabledIf doesn't seem to work with Junit 5")
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
 		logger.info("##################### Value of property test-silvercloud-scnodes: "+ testingEnabled);
