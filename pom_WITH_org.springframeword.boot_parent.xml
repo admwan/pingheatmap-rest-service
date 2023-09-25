@@ -19,68 +19,70 @@
 	</properties>
 	<dependencies>
 
-<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>6.0.11</version>
-</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.0.11</version>
+		</dependency>
 
 
-
-<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een verbinding te maken met een RabbitMQ server -->
+		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
+		verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
 			<version>5.7.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
- 
- 		<dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
 
 
-<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
+		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
 	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-api</artifactId>
-    <version>2.20.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-core</artifactId>
-    <version>2.20.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-slf4j-impl</artifactId>
-    <version>2.20.0</version>
-</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.20.0</version>
+		</dependency>
 
-<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
-<dependency>
-    <groupId>org.springframework.amqp</groupId>
-    <artifactId>spring-rabbit-test</artifactId>
-    <version>3.0.8</version>
-    <scope>test</scope>
-</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit-test</artifactId>
+			<version>3.0.8</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -109,9 +111,11 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- the configuration element must be OUTSIDE the element executions!! -->
+					<!-- the configuration element must be OUTSIDE the element
+					executions!! -->
 					<configuration>
-						<mainClass>net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
+						<mainClass>
+							net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
 

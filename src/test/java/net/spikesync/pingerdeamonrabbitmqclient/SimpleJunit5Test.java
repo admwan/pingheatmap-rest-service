@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,6 +24,9 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
 public class SimpleJunit5Test {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplicationTests.class);
+
 	@Autowired
 	private SilverCloud sc;
 
@@ -37,6 +42,11 @@ public class SimpleJunit5Test {
 
 	@Test
 	public void messageTest() {
+		
+		logger.debug("Now in SimpleJunit5Test.messageTest!!!! LOGGER WORKS @INFO ------------------------------------------");
+		
+		System.out.println("Now in SimpleJunit5Test.messageTest ---  System.out, not the logger!!!!");
+		
 		ArrayList<SilverCloudNode> nodes = sc.getScNodes();
 		SilverCloudNode targetNode = null;
 		for (SilverCloudNode node : nodes) {
