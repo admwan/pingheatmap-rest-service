@@ -1,0 +1,1 @@
+In this branch there are two versions of the POM: one without the parent org.springframework.boot and one without. They both work, but the difference in execution time is negligible. In the version without Spring-Boot the logger isn't working (don't know why not). This is just a snapshot of the project at this stage
