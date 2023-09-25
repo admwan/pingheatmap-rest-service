@@ -94,7 +94,7 @@ class PingerdaemonRabbitmqClientApplicationTests {
  		logger.debug("Value of test-pingerdaemon-context: " + this.testingEnabled);
 	}
 	
-	//@Test
+	@Test
 	//@Disabled("@EnabledIf doesn't seem to work with Junit 5")
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
