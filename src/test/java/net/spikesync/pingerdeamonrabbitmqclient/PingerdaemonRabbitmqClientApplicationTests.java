@@ -98,6 +98,9 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	//@Disabled("@EnabledIf doesn't seem to work with Junit 5")
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
+		System.out.println("Logger name: " + logger.getName());
+		System.out.println("Logger enabled for debugging? " + logger.isDebugEnabled());
+
 		logger.info("##################### Value of property test-silvercloud-scnodes: "+ testingEnabled);
 		logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
 		logger.debug("Value of this.testingEnabled: " + this.testingEnabled);

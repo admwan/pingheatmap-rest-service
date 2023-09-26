@@ -4,7 +4,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- In deze versie staat GEEN parent! In de andere versie is org.springframework.boot 
+<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring Framework, NO Spring Boot!! 
+
+	 In deze versie staat GEEN parent! In de andere versie is org.springframework.boot 
 		de parent, hier dus opzettelijk niet!! -->
 
 	<groupId>net.spikesync</groupId>
@@ -24,6 +26,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>6.0.11</version>
+				<exclusions>
+				   <exclusion>
+					  <groupId>commons-logging</groupId>
+					  <artifactId>commons-logging</artifactId>
+				   </exclusion>
+				</exclusions>
 		</dependency>
 
 
@@ -63,6 +71,19 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.20.0</version>
 		</dependency>
+
+ <!-- LogBack dependencies -->
+    <dependency>
+    	<groupId>ch.qos.logback</groupId>
+    	<artifactId>logback-classic</artifactId>
+    	<version>1.4.11</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>jcl-over-slf4j</artifactId>
+    	<version>2.0.9</version>
+    </dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
 		<dependency>

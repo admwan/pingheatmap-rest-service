@@ -12,12 +12,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import ch.qos.logback.core.joran.spi.JoranException;
+import net.spikesync.pingerdaemonrabbitmqclient.LogbackConfigurator;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloud;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
@@ -25,7 +29,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 @ContextConfiguration("classpath:beans.xml")
 public class SimpleJunit5Test {
 	
-	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplicationTests.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimpleJunit5Test.class);
 
 	@Autowired
 	private SilverCloud sc;
@@ -43,8 +47,17 @@ public class SimpleJunit5Test {
 	@Test
 	public void messageTest() {
 		
-		logger.debug("Now in SimpleJunit5Test.messageTest!!!! LOGGER WORKS @INFO ------------------------------------------");
+//		try {
+//			LogbackConfigurator.configure("logback.xml");
+//		} catch (JoranException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
+		logger.debug("Now in SimpleJunit5Test.messageTest!!!! LOGGER WORKS @INFO ------------------------------------------");
+		System.out.println("Logger name: " + logger.getName());
+		System.out.println("Logger enabled for debugging? " + logger.isDebugEnabled());
+		System.out.println("Logger enabled for error? " + logger.isErrorEnabled());
 		System.out.println("Now in SimpleJunit5Test.messageTest ---  System.out, not the logger!!!!");
 		
 		ArrayList<SilverCloudNode> nodes = sc.getScNodes();
