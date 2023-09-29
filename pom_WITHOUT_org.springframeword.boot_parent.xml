@@ -36,13 +36,13 @@
 		</dependency>
 
 
-
+<!-- 
    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>1.7.0</version>
    </dependency>
-
+ -->
 
 <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api THE NEWER VERSION of slf4j-api doesn't work as version 1.7.0
 <dependency>
