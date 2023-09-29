@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring Boot INCLUDED!! -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<<<<<<< HEAD
-
-<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring Framework, NO Spring Boot!! 
-
-	 In deze versie staat GEEN parent! In de andere versie is org.springframework.boot 
-		de parent, hier dus opzettelijk niet!! -->
-
-=======
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
->>>>>>> log4j-alternative-for-slf4j
 	<groupId>net.spikesync</groupId>
 	<artifactId>pingerdaemon-rabbitmq-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -26,37 +18,24 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-
-
 	<dependencies>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-<<<<<<< HEAD
-			<version>6.0.11</version>
-				<exclusions>
-				   <exclusion>
-					  <groupId>commons-logging</groupId>
-					  <artifactId>commons-logging</artifactId>
-				   </exclusion>
-				</exclusions>
-=======
 			<version>6.0.12</version>
->>>>>>> log4j-alternative-for-slf4j
 		</dependency>
 
 
-		<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
-			te maken met een RabbitMQ server Dit zijn andere dependencies dan in de POM 
-			met Spring-Boot!! -->
+		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
+		verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
 			<version>5.17.1</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
@@ -64,18 +43,15 @@
 			<version>3.0.9</version>
 		</dependency>
 
-<<<<<<< HEAD
-=======
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 			<version>3.1.4</version>
 		</dependency>
->>>>>>> log4j-alternative-for-slf4j
 
 
 		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
-			See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
+	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -93,20 +69,8 @@
 			<version>2.20.0</version>
 		</dependency>
 
- <!-- LogBack dependencies -->
-    <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-classic</artifactId>
-    	<version>1.4.11</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>jcl-over-slf4j</artifactId>
-    	<version>2.0.9</version>
-    </dependency>
-
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
@@ -114,30 +78,17 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.1</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-
 		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.9.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.9.1</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -161,7 +112,8 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- the configuration element must be OUTSIDE the element executions!! -->
+					<!-- the configuration element must be OUTSIDE the element
+					executions!! -->
 					<configuration>
 						<mainClass>
 							net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
