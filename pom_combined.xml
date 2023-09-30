@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-<profiles>
-	<profile>
-		<id>spring-boot-parent</id>
-		<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring 
-			Boot INCLUDED!! -->
+	<profiles>
+		<profile>
+			<id>spring-boot-parent</id>
+			<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring 
+				Boot INCLUDED!! -->
 
-		<project xmlns="http://maven.apache.org/POM/4.0.0"
-			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-			<modelVersion>4.0.0</modelVersion>
 			<parent>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-parent</artifactId>
@@ -127,15 +127,9 @@
 					</plugins>
 				</pluginManagement>
 			</build>
-		</project>
-	</profile>
-	<profile>
-		<id>no-parent</id>
-		<project xmlns="http://maven.apache.org/POM/4.0.0"
-			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-			<modelVersion>4.0.0</modelVersion>
-
+		</profile>
+		<profile>
+			<id>no-parent</id>
 			<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring 
 				Framework, NO Spring Boot!! In deze versie staat GEEN parent! In de andere 
 				versie is org.springframework.boot de parent, hier dus opzettelijk niet!! -->
@@ -280,6 +274,6 @@
 				</pluginManagement>
 			</build>
 
-		</project>
-	</profile>
-</profiles>
+		</profile>
+	</profiles>
+</project>
