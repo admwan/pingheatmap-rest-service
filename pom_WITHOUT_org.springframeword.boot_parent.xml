@@ -27,37 +27,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>6.0.11</version>
-				<exclusions>
-				   <exclusion>
-					  <groupId>commons-logging</groupId>
-					  <artifactId>commons-logging</artifactId>
-				   </exclusion>
-				</exclusions>
 		</dependency>
 
-
-<!-- 
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.7.0</version>
-   </dependency>
- -->
-
-<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api THE NEWER VERSION of slf4j-api doesn't work as version 1.7.0
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>2.0.9</version>
-</dependency>
--->
-
-
-<!-- -->
+	<!-- OUDE SLF4J met OUDE Log4J !!!!!!!!!!! -->
+	<!-- 
    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <!-- <version>1.7.0</version> -->
       <version>1.7.0</version>
    </dependency>
  
@@ -72,6 +48,44 @@
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
    </dependency>
+	-->
+
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-api</artifactId>
+		<version>2.20.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-core</artifactId>
+		<version>2.20.0</version>
+	</dependency>
+
+
+	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+	<dependency>
+	    <groupId>ch.qos.logback</groupId>
+	    <artifactId>logback-classic</artifactId>
+	    <version>1.4.11</version>
+	    <scope>test</scope>
+	</dependency>
+	
+
+	<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j
+	<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-to-slf4j</artifactId>
+	    <version>2.20.0</version>
+	</dependency>
+ -->
+	<!--  Kies tussen log4j-to-slf4j of log4j-slf4j-impl! Beiden werken NIET voor de POM zonder spring-boot!!!! -->
+	<!-- 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+	 -->
 
 
 		<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 

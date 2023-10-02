@@ -20,14 +20,13 @@
 	</properties>
 	<dependencies>
 
-		<!--
-		https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<!-- Dependency on spring-context is not necessary if the project has spring-boot-starter-parent as parent 
+		https://mvnrepository.com/artifact/org.springframework/spring-context 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>6.0.12</version>
-		</dependency>
-
+		</dependency> -->
 
 		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
 		verbinding te maken met een RabbitMQ server -->
