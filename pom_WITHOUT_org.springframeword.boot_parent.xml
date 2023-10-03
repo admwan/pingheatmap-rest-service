@@ -49,31 +49,30 @@
    </dependency>
 	-->
 
-	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 
-		This dependency pulls in slf4j-api!!! See: https://mkyong.com/logging/slf4j-logback-tutorial/ -->
+	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic This 
+		dependency pulls in slf4j-api!!! See: https://mkyong.com/logging/slf4j-logback-tutorial/ -->
 	<dependency>
-	    <groupId>ch.qos.logback</groupId>
-	    <artifactId>logback-classic</artifactId>
-	    <version>1.4.11</version>
-	    <scope>test</scope>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-classic</artifactId>
+		<version>1.4.11</version>
 	</dependency>
-	
-
-		<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
-			te maken met een RabbitMQ server Dit zijn andere dependencies dan in de POM 
-			met Spring-Boot!! -->
-		<dependency>
-			<groupId>com.rabbitmq</groupId>
-			<artifactId>amqp-client</artifactId>
-			<version>5.7.3</version>
-		</dependency>
 
 
-		<dependency>
-			<groupId>org.springframework.amqp</groupId>
-			<artifactId>spring-rabbit</artifactId>
-			<version>3.0.9</version>
-		</dependency>
+	<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
+		te maken met een RabbitMQ server Dit zijn andere dependencies dan in de POM 
+		met Spring-Boot!! -->
+	<dependency>
+		<groupId>com.rabbitmq</groupId>
+		<artifactId>amqp-client</artifactId>
+		<version>5.7.3</version>
+	</dependency>
+
+
+	<dependency>
+		<groupId>org.springframework.amqp</groupId>
+		<artifactId>spring-rabbit</artifactId>
+		<version>3.0.9</version>
+	</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
