@@ -36,6 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
@@ -69,21 +70,21 @@ class PingerdaemonRabbitmqClientApplicationTests {
 
 	 @BeforeAll //From digitalocean Junit 5 tutorial
 	  static void beforeAll() {
-	    System.out.println("**--- Executed once before all test methods in this class ---**");
+	    logger.debug("**--- Executed once before all test methods in this class ---**");
 	  }
 
 	  @BeforeEach //From digitalocean Junit 5 tutorial
 	  void beforeEach() {
-	    System.out.println("**--- Executed before each test method in this class ---**");
+	    logger.debug("**--- Executed before each test method in this class ---**");
 	  }
 	  @AfterEach //From digitalocean Junit 5 tutorial
 	  void afterEach() {
-	    System.out.println("**--- Executed after each test method in this class ---**");
+	    logger.debug("**--- Executed after each test method in this class ---**");
 	  }
 
 	  @AfterAll //From digitalocean Junit 5 tutorial
 	  static void afterAll() {
-	    System.out.println("**--- Executed once after all test methods in this class ---**");
+	    logger.debug("**--- Executed once after all test methods in this class ---**");
 	  }
   
 	  
@@ -100,11 +101,21 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	}
 	
 	@Test
-	//@Disabled("@EnabledIf doesn't seem to work with Junit 5")
+	@EnabledIf("testingEnabled") 
+	void testHeatMap() {
+		PingHeatMap pingHeatMap = context.getBean(PingHeatMap.class);
+		SilverCloudNode colNode = new SilverCloudNode("CAPTUW", null);
+		SilverCloudNode rowNode = new SilverCloudNode("THORFW", null);
+		Integer pingHeat = pingHeatMap.getPingHeat(colNode, rowNode);
+		logger.debug("Value of pingHeatMap.getPingHeat(colNode, rowNode) is:" + pingHeat );
+		assertThat(pingHeat.equals(-1));
+	}
+	
+	@Test
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
-		System.out.println("Logger name: " + logger.getName());
-		System.out.println("Logger enabled for debugging? " + logger.isDebugEnabled());
+		System.out.println("------------------------------------ CHECK LOGGER ---- Logger name: " + logger.getName());
+		System.out.println("------------------------------------ CHECK LOGGER ---- Logger enabled for debugging? " + logger.isDebugEnabled());
 
 		logger.info("##################### Value of property test-silvercloud-scnodes: "+ testingEnabled);
 		logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
