@@ -54,16 +54,18 @@ public class PingHeatMap {
 		return pingHeatMap;
 	}
 	
-	public Integer getPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
-		HashMap<SilverCloudNode, Integer> row = pingHeatMap.get(rowNode);
-		logger.debug("pingHeatMap contains node: " + rowNode.getNodeName() + ", yes? " + pingHeatMap.containsKey(rowNode));
-		
-		logger.debug("##################@@@@@@@@@@@@@@@@@@@@@@ Value of rownode: " + row.toString());
+	public Integer readPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
+		//HashMap<SilverCloudNode, Integer> row = pingHeatMap.get(rowNode);
+		//logger.debug("pingHeatMap contains node: " + rowNode.getNodeName() + ", yes? " + pingHeatMap.containsKey(rowNode));		
+		//logger.debug("##################@@@@@@@@@@@@@@@@@@@@@@ Value of rownode: " + row.toString());
 
-		Integer heat = pingHeatMap.get(rowNode).get(colNode);
-		logger.debug("pingHeat of nodes " + rowNode.getNodeName() + ", " + rowNode.getNodeName() + ": " + heat);
-		
+		//Integer heat = pingHeatMap.get(rowNode).get(colNode);
+		//logger.debug("pingHeat of nodes " + rowNode.getNodeName() + ", " + rowNode.getNodeName() + ": " + heat);	
 		return pingHeatMap.get(rowNode).get(colNode);
 	}
-
+	
+	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, Integer heat) {
+		this.pingHeatMap.get(rowNode).put(colNode, heat);
+	}
+	
 }

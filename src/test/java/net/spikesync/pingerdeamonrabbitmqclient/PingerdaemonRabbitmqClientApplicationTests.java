@@ -104,28 +104,25 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	@EnabledIf("testingEnabled") 
 	void testHeatMap() {
 		PingHeatMap pingHeatMap = context.getBean(PingHeatMap.class);
-		SilverCloudNode colNode = new SilverCloudNode("CAPTUW", null);
-		SilverCloudNode rowNode = new SilverCloudNode("THORFW", null);
-		Integer pingHeat = pingHeatMap.getPingHeat(colNode, rowNode);
-		logger.debug("Value of pingHeatMap.getPingHeat(colNode, rowNode) is:" + pingHeat );
-		assertThat(pingHeat.equals(-1));
+		//Test these two nodes whether a pingHeat value is set properly and then correctly read
+		SilverCloudNode rowNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
+		SilverCloudNode colNode = new SilverCloudNode("THORFW", "192.168.50.107");
+		//Test-value for pingHeat. Put it in first, then read it and compare
+		pingHeatMap.setPingHeat(rowNode, colNode, Integer.valueOf(99));
+		
+		Integer pingHeat = pingHeatMap.readPingHeat(rowNode, colNode);
+		logger.debug("Value of pingHeatMap.getPingHeat(rowNode CAPTUW, colNode THORFW) is: " + pingHeat );
+		assertThat(pingHeat).isEqualByComparingTo(Integer.valueOf(99));
 	}
 	
 	@Test
 	@EnabledIf("testingEnabled")
 	void contextLoads() {
-		System.out.println("------------------------------------ CHECK LOGGER ---- Logger name: " + logger.getName());
-		System.out.println("------------------------------------ CHECK LOGGER ---- Logger enabled for debugging? " + logger.isDebugEnabled());
-
-		logger.info("##################### Value of property test-silvercloud-scnodes: "+ testingEnabled);
-		logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
-		logger.debug("Value of this.testingEnabled: " + this.testingEnabled);
-		
 		if(context!=null)
-			logger.info("**************** AutowiredCapableBeanFactory: " + context.toString());
+			logger.debug("**************** AutowiredCapableBeanFactory: " + context.toString());
 
 		else {
-			logger.info("ApplicationContext variable is null!!");
+			logger.debug("ApplicationContext variable is null!!");
 			return;
 		}
 		assertThat(context).isNotNull();
@@ -136,8 +133,6 @@ class PingerdaemonRabbitmqClientApplicationTests {
 	@SuppressWarnings("unused") // This method is used by JUnit 5 @EnabledIf to determine whether to execute the
 								// test or not.
 	private boolean testingEnabled() {
-		logger.debug("################### In method PingerdaemonRabbitmqClientApplicationTests.testingEnabled() with this.testingEnabled = "
-						+ this.testingEnabled);
 		if ((this.testingEnabled != null) && (testingEnabled.compareToIgnoreCase("TRUE") >= 0)) {
 			logger.debug("Method testingEnabled is returning true!!");
 			return true;

@@ -28,11 +28,10 @@ public class PingerdaemonRabbitmqClientApplication {
     	HashMap<SilverCloudNode, HashMap<SilverCloudNode,Integer>> pingHeatMap = pingHeatMapObj.getPingHeatmap();
 		SilverCloudNode colNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
 		SilverCloudNode rowNode = new SilverCloudNode("THORFW", "192.168.50.107");
-		Integer pingHeat = pingHeatMapObj.getPingHeat(colNode, rowNode);
-		logger.debug("Value of pingHeatMap.getPingHeat(colNode, rowNode) is:" + colNode.getNodeName() + 
-				", " + rowNode.getNodeName() + "): " + pingHeat );
-
- 		Properties prop = PropertiesLoader.loadProperties();
+		Integer pingHeat = pingHeatMapObj.readPingHeat(colNode, rowNode);
+		pingHeatMapObj.setPingHeat(rowNode, colNode, Integer.valueOf(99));
+		logger.debug("Setting pingHeat of (CAPTUW, THORFW) to 99. Now retrieving the value: " + pingHeatMapObj.readPingHeat(rowNode, colNode));
+		Properties prop = PropertiesLoader.loadProperties();
  		if(prop == null) 
  			logger.debug("************** ========= Properties not loaded! Check the name of the properties file! ************** ========= ");
  		else 
