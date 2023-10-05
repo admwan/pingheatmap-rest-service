@@ -29,7 +29,8 @@ public class PingerdaemonRabbitmqClientApplication {
 		SilverCloudNode colNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
 		SilverCloudNode rowNode = new SilverCloudNode("THORFW", "192.168.50.107");
 		Integer pingHeat = pingHeatMapObj.getPingHeat(colNode, rowNode);
-		logger.debug("Value of pingHeatMap.getPingHeat(colNode, rowNode) is:" + pingHeat );
+		logger.debug("Value of pingHeatMap.getPingHeat(colNode, rowNode) is:" + colNode.getNodeName() + 
+				", " + rowNode.getNodeName() + "): " + pingHeat );
 
  		Properties prop = PropertiesLoader.loadProperties();
  		if(prop == null) 
