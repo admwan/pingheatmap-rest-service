@@ -50,7 +50,7 @@ public class PingMsgReader {
 	}
 	
 
-	public static void main(String args[]) {
+/*	public static void main(String args[]) {
 		ApplicationContext context = new GenericXmlApplicationContext(
 				"classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
 		SilverCloud sc = context.getBean(SilverCloud.class);
@@ -59,9 +59,9 @@ public class PingMsgReader {
 		Queue rmq = context.getBean(Queue.class);
 		PingMsgReader msgR = new PingMsgReader(sc,amqp,cCfact,rmq);
 		msgR.connectPingMQ(context);
-
 	}
-
+*/
+	
 	public void connectPingMQ() {
 		LOGGER.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
 		try {
@@ -81,7 +81,7 @@ public class PingMsgReader {
 
 	}
 
-	public void connectPingMQ(ApplicationContext context) {
+/*	public void connectPingMQ(ApplicationContext context) {
 
 		CachingConnectionFactory factory = context.getBean(CachingConnectionFactory.class);
 		connection = null;
@@ -104,7 +104,8 @@ public class PingMsgReader {
 			e1.printStackTrace();
 			System.exit(0);
 		}
-	}
+	} 
+	*/
 /*
 	public void updatePingHeatMap(ApplicationContext context) {
 

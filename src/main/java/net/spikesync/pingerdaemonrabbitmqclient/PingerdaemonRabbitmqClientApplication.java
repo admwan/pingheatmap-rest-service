@@ -23,15 +23,7 @@ public class PingerdaemonRabbitmqClientApplication {
     	devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
     	
     	
-    	//Test PingHeatMap with debugger (debuggind doesn't work in test-methods).
-    	PingHeatMap pingHeatMapObj = devPingApp.context.getBean(PingHeatMap.class);
-//    	HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingEntry.PINGHEAT>> pingHeatMap = pingHeatMapObj.getPingHeatmap();
-//		SilverCloudNode colNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
-//		SilverCloudNode rowNode = new SilverCloudNode("THORFW", "192.168.50.107");
-//		Integer pingHeat = pingHeatMapObj.readPingHeat(colNode, rowNode);
-//		pingHeatMapObj.setPingHeat(rowNode, colNode, Integer.valueOf(99));
-//		logger.debug("Setting pingHeat of (CAPTUW, THORFW) to 99. Now retrieving the value: " + pingHeatMapObj.readPingHeat(rowNode, colNode));
-		Properties prop = PropertiesLoader.loadProperties();
+ 		Properties prop = PropertiesLoader.loadProperties();
  		if(prop == null) 
  			logger.debug("************** ========= Properties not loaded! Check the name of the properties file! ************** ========= ");
  		else 
