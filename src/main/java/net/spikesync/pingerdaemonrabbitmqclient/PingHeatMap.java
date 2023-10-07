@@ -21,32 +21,28 @@ public class PingHeatMap {
 	
 		for (SilverCloudNode rowNode : sc.getScNodes()) {
 
-			//Create a new row for the pingHeatMap
+			//Create a new row for the pingHeatMap: this is a new HashMap!! 
 			HashMap<SilverCloudNode, Integer> colEntry = new HashMap<SilverCloudNode, Integer>();
 			//Put the new row in the pingHeatMap
 			pingHeatMap.put(rowNode, colEntry);
 			
 			for (SilverCloudNode colNode : sc.getScNodes()) {
 
-				//Put a new entry into the current row of the pingHeatMap
+				//Put a new column entry into the current row of the pingHeatMap, i.e., an entry in the row-HashMap.
 				colEntry.put(new SilverCloudNode(colNode), Integer.valueOf(-1)); // The default meaningless value of -1 is the default and means there is no real value for the ping heat.
 				
 				logger.debug("New column Entry: " + colNode.toString());
-				
 				logger.debug("Putting Node " + rowNode.getNodeName() + ", " + colNode.getNodeName() + " in PingHeatMap" + 
 						" -- col, row: (" + colCount + ", " + rowCount + ") ");
-				
 				colCount++; //Increment the column number
 			}
 			//Add the fully filled column to the pingHeatmap
 			pingHeatMap.put(new SilverCloudNode(rowNode), colEntry);
-
 			logger.debug("Current row of NODE: " + rowNode.getNodeName() + " IN the pingHeatMap: " + this.pingHeatMap.get(rowNode).toString());
 			
 			rowCount++; //Increment the column number
 			colCount=0; //Start a new column and set it to index 0
 		}
-		
 	}
 	
 	// Change to private access when the class is working properly
