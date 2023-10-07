@@ -17,17 +17,19 @@ public class PingEntry implements Cloneable {
 	public static enum PINGRESULT { // Use this enum instead of integer codes.
 		PINGSUCCESS,
 		PINGFAILURE,
-		PINGUNKOWN
+		PINGUNKOWN // Ping status/result unknown. Used to be -1 (Integer).
 	}
 	
 	public static enum PINGHEAT {
+	
 		GLACIAL,
 		FRIGID,
 		CRISPY, 
 		TEPID,
 		SNUG,
 		TROPIC,
-		SCORCHING
+		SCORCHING,
+		UNKNOWN // Pingheat is unknown. Used to be -1 (Integer).
 	}
 	
 

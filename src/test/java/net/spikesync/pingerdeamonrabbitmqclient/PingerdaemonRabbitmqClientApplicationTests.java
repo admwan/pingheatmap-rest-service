@@ -36,6 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
@@ -108,11 +109,11 @@ class PingerdaemonRabbitmqClientApplicationTests {
 		SilverCloudNode rowNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
 		SilverCloudNode colNode = new SilverCloudNode("THORFW", "192.168.50.107");
 		//Test-value for pingHeat. Put it in first, then read it and compare
-		pingHeatMap.setPingHeat(rowNode, colNode, Integer.valueOf(99));
+		pingHeatMap.setPingHeat(rowNode, colNode, PINGHEAT.TEPID);
 		
-		Integer pingHeat = pingHeatMap.readPingHeat(rowNode, colNode);
+		PINGHEAT pingHeat = pingHeatMap.readPingHeat(rowNode, colNode);
 		logger.debug("Value of pingHeatMap.getPingHeat(rowNode CAPTUW, colNode THORFW) is: " + pingHeat );
-		assertThat(pingHeat).isEqualByComparingTo(Integer.valueOf(99));
+		assertThat(pingHeat).isEqualByComparingTo(PINGHEAT.TEPID);
 	}
 	
 	@Test
