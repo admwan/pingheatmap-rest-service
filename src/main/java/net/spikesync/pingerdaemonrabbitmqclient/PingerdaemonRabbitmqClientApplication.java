@@ -29,9 +29,7 @@ public class PingerdaemonRabbitmqClientApplication {
  		else 
  			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
        
-        
-
- 		
+     	
  		devPingApp.run(args);
     }
 
@@ -43,8 +41,9 @@ public class PingerdaemonRabbitmqClientApplication {
         
         logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
 
+        // In this project everything needed by PingMsgReader is injected at bean-construction time, so it is ready to be used!
         this.pingMsgReader.connectPingMQ();
-
+        this.pingMsgReader.updatePingHeatMap();
     }
 }
 

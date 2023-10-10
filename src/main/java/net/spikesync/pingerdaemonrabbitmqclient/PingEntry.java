@@ -11,9 +11,17 @@ public class PingEntry implements Cloneable {
 	private SilverCloudNode pingOrig;
 	private SilverCloudNode pingDest;
 	private Date lastPingDate;
-	private int lastPingResult; // -1 means unkown, 0 means failed, 1 means succeeded
-	private int pingHeat; // -1 means unknown. scale pingheated: 0 means long time ago, 10 means recently heated (ping successful)
+	private PINGRESULT lastPingResult; // -1 means unkown, 0 means failed, 1 means succeeded
+	private PINGHEAT pingHeat; // -1 means unknown. scale pingheated: 0 means long time ago, 10 means recently heated (ping successful)
 
+	public PingEntry(Date lastDate, SilverCloudNode orig, SilverCloudNode dest, PINGRESULT lastResult, PINGHEAT heat) {
+		this.lastPingDate = lastDate;
+		this.pingOrig = orig;
+		this.pingDest = dest;
+		this.lastPingResult = lastResult;
+		this.pingHeat = heat;
+	}
+	
 	public static enum PINGRESULT { // Use this enum instead of integer codes.
 		PINGSUCCESS,
 		PINGFAILURE,
@@ -33,10 +41,10 @@ public class PingEntry implements Cloneable {
 	}
 	
 
-	public int getPingHeat() {
+	public PINGHEAT getPingHeat() {
 		return pingHeat;
 	}
-	public void setPingHeat(int pingHeat) {
+	public void setPingHeat(PINGHEAT pingHeat) {
 		this.pingHeat = pingHeat;
 	}
 	public SilverCloudNode getPingOrig() {
@@ -57,10 +65,10 @@ public class PingEntry implements Cloneable {
 	public void setLastPingDate(Date lastPing) {
 		this.lastPingDate = lastPing;
 	}
-	public int getLastPingResult() {
+	public PINGRESULT getLastPingResult() {
 		return lastPingResult;
 	}
-	public void setLastPingResult(int lastPingResult) {
+	public void setLastPingResult(PINGRESULT lastPingResult) {
 		this.lastPingResult = lastPingResult;
 	}
 	

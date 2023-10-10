@@ -30,6 +30,14 @@ public class SilverCloudNode {
 		return this.ipAddress;
 	}
 
+	public void setNodeName(String nName) {
+		this.nodeName = nName;
+	}
+	
+	public void setIpAddess(String ipAdr) {
+		this.ipAddress = ipAdr;
+	}
+	
 	@Override
 	public String toString() {
 		return ("(" + this.nodeName + ", " + this.ipAddress + ")");
