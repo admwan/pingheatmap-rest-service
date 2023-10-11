@@ -47,6 +47,8 @@ public class PingerdaemonRabbitmqClientApplication {
         // In this project everything needed by PingMsgReader is injected at bean-construction time, so it is ready to be used!
         this.pingMsgReader.connectPingMQ();
         ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
+        this.pingHeatMap.setPingHeat(newPingEnties);
+        
     }
 }
 

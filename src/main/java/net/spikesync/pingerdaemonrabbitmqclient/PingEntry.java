@@ -30,6 +30,7 @@ public class PingEntry implements Cloneable {
 	
 	public static enum PINGHEAT {
 	
+		UNKNOWN, // Pingheat is unknown. This is the LOWEST ordinal!! Important to determine the warmer or colder temperature!
 		GLACIAL,
 		FRIGID,
 		CRISPY, 
@@ -37,10 +38,45 @@ public class PingEntry implements Cloneable {
 		SNUG,
 		TROPIC,
 		SCORCHING,
-		UNKNOWN // Pingheat is unknown. Used to be -1 (Integer).
 	}
 	
-
+	public int getPingHeatInDegrees() {
+		switch(pingHeat) {
+		case UNKNOWN: return 0;
+		case GLACIAL: return 1;
+		case FRIGID: return 2;
+		case CRISPY: return 3;
+		case TEPID: return 4;
+		case SNUG: return 5;
+		case TROPIC: return 6;
+		case SCORCHING: return 7;
+		default: 
+			break;
+		}
+		return 0; // This value (the default) is the same as UNKNOWN.
+	}
+	
+	public PINGHEAT getWarmerHeat(PINGHEAT temperature) {
+		int index = temperature.ordinal();
+		int nextIndex = index + 1;
+		if (nextIndex > 7) return PINGHEAT.SCORCHING; //Hotter than SCORCHING is not possible.
+		PINGHEAT[] pingheat = PINGHEAT.values();
+		nextIndex %= pingheat.length;
+		return pingheat[nextIndex];
+	}
+	
+	public PINGHEAT getColderHeat(PINGHEAT temperature) {
+		int index = temperature.ordinal();
+		int nextIndex = index - 1;
+		if(nextIndex == 0) return PINGHEAT.GLACIAL; // Colder thant GLACIAL is not possible. 
+		else if(nextIndex == -1) return PINGHEAT.UNKNOWN; // PINGHEAT was unknown, and on an unsuccessful ing it remains unknown.
+		PINGHEAT[] pingheat = PINGHEAT.values();
+		nextIndex %= pingheat.length;
+		return pingheat[nextIndex];
+	}
+	
+	
+	
 	public PINGHEAT getPingHeat() {
 		return pingHeat;
 	}

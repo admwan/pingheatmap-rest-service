@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
+import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
 
 public class PingHeatMap {
 
@@ -72,6 +73,17 @@ public class PingHeatMap {
 			SilverCloudNode rowNode = pingEntry.getPingOrig();
 			SilverCloudNode colNode = pingEntry.getPingDest();
 			PINGHEAT currentPingHeat = getPingHeat(rowNode, colNode); // How to get the next warmer value of PINGHEAT on pinguccess??
+			PINGHEAT nextPingHeat = PINGHEAT.UNKNOWN ;
+			if(pingEntry.getLastPingResult().equals(PINGRESULT.PINGSUCCESS)) {
+				nextPingHeat = pingEntry.getWarmerHeat(currentPingHeat);
+			}
+			else if(pingEntry.getLastPingResult().equals(PINGRESULT.PINGFAILURE)) {
+				nextPingHeat = pingEntry.getColderHeat(currentPingHeat);
+			}
+			setPingHeat(rowNode, colNode, nextPingHeat);
+			logger.debug("Set pingheat of (rowNode, colNode): (" + rowNode.getNodeName() + ", " + colNode.getNodeName() + 
+					") to:" + nextPingHeat.toString());
+			
 		}
 	}
 	
