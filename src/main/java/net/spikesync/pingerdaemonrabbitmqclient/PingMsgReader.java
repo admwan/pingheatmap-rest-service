@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -48,14 +49,14 @@ public class PingMsgReader {
 		this.rabbitMQ = rq;
 	}
 
-	public SilverCloud getSilverCloud() {
-		return this.silverCloud;
-	}
-
-	public AmqpTemplate getAmqpTemplate() {
-		return this.amqpTemplate;
-	}
-
+//	public SilverCloud getSilverCloud() {
+//		return this.silverCloud;
+//	}
+//
+//	public AmqpTemplate getAmqpTemplate() {
+//		return this.amqpTemplate;
+//	}
+//
 	/*
 	 * public static void main(String args[]) { ApplicationContext context = new
 	 * GenericXmlApplicationContext(
@@ -112,7 +113,7 @@ public class PingMsgReader {
 	// That is soooo UN-Spring and ...
 	// In the project pingerdaemon-rabbitmq-client all the necessary dependencies
 	// are present when the bean is instantiated.
-	public void updatePingHeatMap() {
+	public ArrayList<PingEntry> createPingEntriesFromRabbitMqMessages() {
 
 		long nOfWaitingMsgs = 0;
 
@@ -135,14 +136,19 @@ public class PingMsgReader {
 
 		Object onePingMessage;
 
+		ArrayList<PingEntry> pingEntriesFromRmq = new ArrayList<PingEntry>();
+		
 		while (nOfWaitingMsgs-- > 0) {
 			onePingMessage = this.amqpTemplate.receiveAndConvert(this.rabbitMQ.getName());
 			if (onePingMessage != null) {
-				LOGGER.debug("Parsed Message: " + parsePingMessageProperly(onePingMessage.toString()).toString());
+				PingEntry newPingEntry = parsePingMessageProperly(onePingMessage.toString());
+				pingEntriesFromRmq.add(newPingEntry);
+				LOGGER.debug("Parsed Message: " + newPingEntry.toString());
 			} else
 				LOGGER.debug(
 						"Message retrieved in PingMsgReader.updatePingHeatMap() is empty. NOT UPDATING pingHeatMap!");
 		}
+		return pingEntriesFromRmq;
 	}
 
 	private PingEntry parsePingMessageProperly(String pingQm) {

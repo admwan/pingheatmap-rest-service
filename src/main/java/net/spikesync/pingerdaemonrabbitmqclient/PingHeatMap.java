@@ -1,5 +1,6 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class PingHeatMap {
 		return pingHeatMap;
 	}
 	
-	public PINGHEAT readPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
+	public PINGHEAT getPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
 		//HashMap<SilverCloudNode, Integer> row = pingHeatMap.get(rowNode);
 		//logger.debug("pingHeatMap contains node: " + rowNode.getNodeName() + ", yes? " + pingHeatMap.containsKey(rowNode));		
 		//logger.debug("##################@@@@@@@@@@@@@@@@@@@@@@ Value of rownode: " + row.toString());
@@ -64,6 +65,14 @@ public class PingHeatMap {
 	
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PINGHEAT heat) {
 		this.pingHeatMap.get(rowNode).put(colNode, heat);
+	}
+	
+	public void setPingHeat(ArrayList<PingEntry> pingEntries) {
+		for (PingEntry pingEntry : pingEntries) {
+			SilverCloudNode rowNode = pingEntry.getPingOrig();
+			SilverCloudNode colNode = pingEntry.getPingDest();
+			PINGHEAT currentPingHeat = getPingHeat(rowNode, colNode); // How to get the next warmer value of PINGHEAT on pinguccess??
+		}
 	}
 	
 }

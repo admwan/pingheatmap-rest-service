@@ -111,7 +111,7 @@ class PingerdaemonRabbitmqClientApplicationTests {
 		//Test-value for pingHeat. Put it in first, then read it and compare
 		pingHeatMap.setPingHeat(rowNode, colNode, PINGHEAT.TEPID);
 		
-		PINGHEAT pingHeat = pingHeatMap.readPingHeat(rowNode, colNode);
+		PINGHEAT pingHeat = pingHeatMap.getPingHeat(rowNode, colNode);
 		logger.debug("Value of pingHeatMap.getPingHeat(rowNode CAPTUW, colNode THORFW) is: " + pingHeat );
 		assertThat(pingHeat).isEqualByComparingTo(PINGHEAT.TEPID);
 	}

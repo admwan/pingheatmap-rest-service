@@ -1,6 +1,7 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -17,10 +18,12 @@ public class PingerdaemonRabbitmqClientApplication {
     private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
 	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
 	private PingMsgReader pingMsgReader;
+	private PingHeatMap pingHeatMap;
     
     public static void main(String[] args) {
     	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication();
     	devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
+    	devPingApp.pingHeatMap = devPingApp.context.getBean(PingHeatMap.class);
     	
     	
  		Properties prop = PropertiesLoader.loadProperties();
@@ -43,7 +46,7 @@ public class PingerdaemonRabbitmqClientApplication {
 
         // In this project everything needed by PingMsgReader is injected at bean-construction time, so it is ready to be used!
         this.pingMsgReader.connectPingMQ();
-        this.pingMsgReader.updatePingHeatMap();
+        ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
     }
 }
 
