@@ -40,7 +40,7 @@ public class PingEntry implements Cloneable {
 		SCORCHING,
 	}
 	
-	public int getPingHeatInDegrees() {
+	public int getPingHeatOrdinals() {
 		switch(pingHeat) {
 		case UNKNOWN: return 0;
 		case GLACIAL: return 1;

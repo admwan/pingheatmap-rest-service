@@ -31,12 +31,19 @@ public class PingerdaemonRabbitmqClientApplication {
  			logger.debug("************** ========= Properties not loaded! Check the name of the properties file! ************** ========= ");
  		else 
  			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
-       
+  
+ 		Runnable r = new Runnable() { 
+ 			public void run() {
+ 				devPingApp.readRmqAndUpdatePingHeatMap(args);
+ 			}
+ 		};
+ 		
+ 		new Thread(r).start();
      	
- 		devPingApp.run(args);
+// 		devPingApp.run(args);
     }
 
-    public void run(String... args) {
+    public void readRmqAndUpdatePingHeatMap(String... args) {
         
         for (int i = 0; i < args.length; ++i) {
             logger.info("args[{}]: {}", i, args[i]);
@@ -45,10 +52,18 @@ public class PingerdaemonRabbitmqClientApplication {
         logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
 
         // In this project everything needed by PingMsgReader is injected at bean-construction time, so it is ready to be used!
-        this.pingMsgReader.connectPingMQ();
-        ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
-        this.pingHeatMap.setPingHeat(newPingEnties);
-        
+        while(true) {
+			this.pingMsgReader.connectPingMQ();
+			ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
+			this.pingHeatMap.setPingHeat(newPingEnties);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
     }
 }
 
