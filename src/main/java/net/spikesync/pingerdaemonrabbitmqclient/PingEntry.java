@@ -68,8 +68,8 @@ public class PingEntry implements Cloneable {
 	public PINGHEAT getColderHeat(PINGHEAT temperature) {
 		int index = temperature.ordinal();
 		int nextIndex = index - 1;
-		if(nextIndex == 0) return PINGHEAT.GLACIAL; // Colder thant GLACIAL is not possible. 
-		else if(nextIndex == -1) return PINGHEAT.UNKNOWN; // PINGHEAT was unknown, and on an unsuccessful ing it remains unknown.
+		if(nextIndex == 0) return PINGHEAT.GLACIAL; // Colder than GLACIAL is not possible. 
+		else if(nextIndex == -1) return PINGHEAT.UNKNOWN; // PINGHEAT was unknown, and on an unsuccessful ping it remains unknown.
 		PINGHEAT[] pingheat = PINGHEAT.values();
 		nextIndex %= pingheat.length;
 		return pingheat[nextIndex];

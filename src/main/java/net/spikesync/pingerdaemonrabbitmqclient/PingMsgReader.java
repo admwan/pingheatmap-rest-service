@@ -68,24 +68,29 @@ public class PingMsgReader {
 	 * PingMsgReader(sc,amqp,cCfact,rmq); msgR.connectPingMQ(context); }
 	 */
 
-	public void connectPingMQ() {
-		LOGGER.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
-		try {
-			this.connection = this.factory.createConnection();
-			this.channel = this.connection.createChannel(false);
-			this.channel.queueDeclare(this.rabbitMQ.getName(), false, false, false, null);
-			// The test below should be moved to the test class. All the injected
-			// dependencies should be checked during testing, not here!
-			if (this.amqpTemplate == null) {
-				LOGGER.error(
-						"Could not instantiate AmqpTemplate in connectPingMQ!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
+	public boolean connectPingMQ() {
+		if (this.connection == null) {
+			LOGGER.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
+			try {
+				this.connection = this.factory.createConnection();
+				this.channel = this.connection.createChannel(false);
+				this.channel.queueDeclare(this.rabbitMQ.getName(), false, false, false, null);
+				// The test below should be moved to the test class. All the injected
+				// dependencies should be checked during testing, not here!
+				if (this.amqpTemplate == null) {
+					LOGGER.error(
+							"Could not instantiate AmqpTemplate in connectPingMQ!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
+				}
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				LOGGER.error("Failed to connect to RabbitMQ!! Is the RabbitMQ running?");
+				return false;
 			}
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			System.exit(0);
-		}
-
+			return true; //this.connection was false, i.e., there was no connection yet, but now there is.
+		} 
+		else return true; //There already was a connection and it can be used. 
+		
 	}
 
 	/*
@@ -132,12 +137,13 @@ public class PingMsgReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		LOGGER.debug("Number of waiting messages in Queue: " + nOfWaitingMsgs);
 
 		Object onePingMessage;
 
 		ArrayList<PingEntry> pingEntriesFromRmq = new ArrayList<PingEntry>();
-		
+
 		while (nOfWaitingMsgs-- > 0) {
 			onePingMessage = this.amqpTemplate.receiveAndConvert(this.rabbitMQ.getName());
 			if (onePingMessage != null) {
@@ -193,73 +199,4 @@ public class PingMsgReader {
 
 	}
 
-	/*
-	 * This method both parses a message from String and writes it into the
-	 * PingerMatrix. Split it up into parsing and writing methods.
-	 */
-
-	/*
-	 * private void parsePingMessage(String pingQM) {
-	 * 
-	 * LOGGER.info(" [x] Received '" + pingQM + "'"); String delims = ";"; String[]
-	 * tokens = pingQM.split(delims);
-	 * 
-	 * if (tokens.length != 6) {
-	 * LOGGER.error("Message from RMQ has wrong contents. ABORTING PARSE!!");
-	 * return; } else { PingEntry pe = new PingEntry();
-	 * 
-	 * DateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-	 * Locale.US); try { pe.setLastPingDate(format.parse(tokens[0])); } catch
-	 * (ParseException e) {
-	 * LOGGER.error("Error parsing DATE in message on RMQ. ABORTING Parse!");
-	 * return; }
-	 * 
-	 * try { pe.setPingOrig(SilverCloudNode.valueOf(tokens[1]));
-	 * 
-	 * } catch (IllegalArgumentException iae) { LOGGER.
-	 * error("Error parsing ORIGINATOR node in message from RMQ. ABORTING Parse!");
-	 * return; } try { pe.setPingDest(SilverCloudNode.valueOf(tokens[3])); } catch
-	 * (IllegalArgumentException iae) { LOGGER.
-	 * error("Error parsing DESTINATION node in message from RMQ. ABORTING Parse!");
-	 * return; }
-	 * 
-	 * /* FIELDS of the PingEntry object:
-	 * 
-	 * SilverCloudNode pingOrig; DO NOT CHANGE! SilverCloudNode pingDest; DO NOT
-	 * CHANGE! Date lastPing; CHANGE to the value of the message in the Ping Message
-	 * Queue. int lastPingResult; CHANGE to the value of the message in the Ping
-	 * Message Queue. int pingHeat; CHANGE according to the 'heat' algorithm
-	 * 
-	 * 
-	 * 
-	 * // Determining the success of the ping and the values to update the
-	 * pingHeatMap // with ... if (tokens[5].equals("pingsuccess")) {
-	 * pe.setLastPingResult(1); } else if (tokens[5].equals("pingfailure")) {
-	 * pe.setLastPingResult(-1); }
-	 * 
-	 * else { LOGGER.error(
-	 * "Error parsing ping result field. tokens[5] should be one of {\"pingsuccess\", \"pingfailure\"} node in message from RMQ. ABORTING Parse!"
-	 * ); return; }
-	 * 
-	 * HashMap<SilverCloudNode, PingEntry> pingHeatMapRow =
-	 * this.pingHeatMap.getHeatMapRow(pe.getPingOrig()); // PingOrig // is // the //
-	 * row PingEntry peHeatMapEntry = (PingEntry)
-	 * pingHeatMapRow.get(pe.getPingDest()); // PingDest is the column
-	 * 
-	 * if (peHeatMapEntry != null) {
-	 * 
-	 * LOGGER.debug("PingEntry retrieved from pingHeatMap: " +
-	 * peHeatMapEntry.toString()); // Zet hier de JUnit test bij!!
-	 * 
-	 * peHeatMapEntry.setLastPingDate(pe.getLastPingDate());
-	 * 
-	 * if (pe.getLastPingResult() == -1) { // Immediately change the pinHeat to 0 if
-	 * the ping is unsuccessful! peHeatMapEntry.setPingHeat(0);
-	 * peHeatMapEntry.setLastPingResult(0); } else if ((peHeatMapEntry.getPingHeat()
-	 * + 1 <= 10)) { peHeatMapEntry.setPingHeat(peHeatMapEntry.getPingHeat() + 1);
-	 * peHeatMapEntry.setLastPingResult(1); } } else {
-	 * LOGGER.error("Ping Entry for source: " + pe.getPingOrig() +
-	 * " and destination: " + pe.getPingDest() +
-	 * " does not exist! Check if nodes in silvercloud-context.xml exist!!"); } }
-	 */
 }
