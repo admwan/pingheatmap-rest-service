@@ -32,15 +32,28 @@ public class PingerdaemonRabbitmqClientApplication {
  		else 
  			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
   
- 		Runnable r = new Runnable() { 
+ 		Runnable r1 = new Runnable() { 
  			public void run() {
  				devPingApp.readRmqAndUpdatePingHeatMap(args);
  			}
  		};
- 		
- 		new Thread(r).start();
+ 		new Thread(r1).start();
      	
-// 		devPingApp.run(args);
+ 		Runnable r2 = new Runnable() {
+ 			public void run() {
+ 				while (true) {
+ 				devPingApp.pingHeatMap.coolDownPingHeat();
+					try {
+						Thread.sleep(8000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+ 				}
+ 			}
+ 				
+ 		};
+ 		new Thread(r2).start();
     }
 
     public void readRmqAndUpdatePingHeatMap(String... args) {

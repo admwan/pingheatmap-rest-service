@@ -2,6 +2,7 @@ package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,17 @@ public class PingHeatMap {
 		//logger.debug("pingHeat of nodes " + rowNode.getNodeName() + ", " + rowNode.getNodeName() + ": " + heat);	
 		return pingHeatMap.get(rowNode).get(colNode);
 	}
-	
+	public void coolDownPingHeat() {
+		for(Entry<SilverCloudNode, HashMap<SilverCloudNode, PINGHEAT>> rowNode : pingHeatMap.entrySet()) {
+			for(Entry<SilverCloudNode, PINGHEAT> colNode : rowNode.getValue().entrySet()) {
+				colNode.setValue(PingEntry.getColderHeat(colNode.getValue()));
+				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", " +
+						colNode.getKey().getNodeName()+ "): " + colNode.getValue());
+				
+			}
+		}
+	}
+
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PINGHEAT heat) {
 		this.pingHeatMap.get(rowNode).put(colNode, heat);
 	}

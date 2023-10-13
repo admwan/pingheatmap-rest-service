@@ -56,7 +56,7 @@ public class PingEntry implements Cloneable {
 		return 0; // This value (the default) is the same as UNKNOWN.
 	}
 	
-	public PINGHEAT getWarmerHeat(PINGHEAT temperature) {
+	static public PINGHEAT getWarmerHeat(PINGHEAT temperature) {
 		int index = temperature.ordinal();
 		int nextIndex = index + 1;
 		if (nextIndex > 7) return PINGHEAT.SCORCHING; //Hotter than SCORCHING is not possible.
@@ -65,7 +65,7 @@ public class PingEntry implements Cloneable {
 		return pingheat[nextIndex];
 	}
 	
-	public PINGHEAT getColderHeat(PINGHEAT temperature) {
+	static public PINGHEAT getColderHeat(PINGHEAT temperature) {
 		int index = temperature.ordinal();
 		int nextIndex = index - 1;
 		if(nextIndex == 0) return PINGHEAT.GLACIAL; // Colder than GLACIAL is not possible. 
