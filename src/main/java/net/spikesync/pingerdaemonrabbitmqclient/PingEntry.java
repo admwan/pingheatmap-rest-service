@@ -40,22 +40,6 @@ public class PingEntry implements Cloneable {
 		SCORCHING,
 	}
 	
-	public int getPingHeatOrdinals() {
-		switch(pingHeat) {
-		case UNKNOWN: return 0;
-		case GLACIAL: return 1;
-		case FRIGID: return 2;
-		case CRISPY: return 3;
-		case TEPID: return 4;
-		case SNUG: return 5;
-		case TROPIC: return 6;
-		case SCORCHING: return 7;
-		default: 
-			break;
-		}
-		return 0; // This value (the default) is the same as UNKNOWN.
-	}
-	
 	static public PINGHEAT getWarmerHeat(PINGHEAT temperature) {
 		int index = temperature.ordinal();
 		int nextIndex = index + 1;
@@ -73,6 +57,23 @@ public class PingEntry implements Cloneable {
 		PINGHEAT[] pingheat = PINGHEAT.values();
 		nextIndex %= pingheat.length;
 		return pingheat[nextIndex];
+	}
+	
+		
+	public int getPingHeatOrdinals() {
+		switch(pingHeat) {
+		case UNKNOWN: return 0;
+		case GLACIAL: return 1;
+		case FRIGID: return 2;
+		case CRISPY: return 3;
+		case TEPID: return 4;
+		case SNUG: return 5;
+		case TROPIC: return 6;
+		case SCORCHING: return 7;
+		default: 
+			break;
+		}
+		return 0; // This value (the default) is the same as UNKNOWN.
 	}
 	
 	

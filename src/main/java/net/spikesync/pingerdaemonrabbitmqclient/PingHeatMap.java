@@ -86,10 +86,10 @@ public class PingHeatMap {
 			PINGHEAT currentPingHeat = getPingHeat(rowNode, colNode); // How to get the next warmer value of PINGHEAT on pinguccess??
 			PINGHEAT nextPingHeat = PINGHEAT.UNKNOWN ;
 			if(pingEntry.getLastPingResult().equals(PINGRESULT.PINGSUCCESS)) {
-				nextPingHeat = pingEntry.getWarmerHeat(currentPingHeat);
+				nextPingHeat = PingEntry.getWarmerHeat(currentPingHeat);
 			}
 			else if(pingEntry.getLastPingResult().equals(PINGRESULT.PINGFAILURE)) {
-				nextPingHeat = pingEntry.getColderHeat(currentPingHeat);
+				nextPingHeat = PingEntry.getColderHeat(currentPingHeat);
 			}
 			setPingHeat(rowNode, colNode, nextPingHeat);
 			logger.debug("Set pingheat of (rowNode, colNode): (" + rowNode.getNodeName() + ", " + colNode.getNodeName() + 
