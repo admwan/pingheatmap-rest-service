@@ -94,8 +94,8 @@ public class PingHeatMap {
 				nextPingHeat = new PingHeatData(PingEntry.getColderHeat(currentPingHeat.getPingHeat()));
 			}
 			setPingHeat(rowNode, colNode, nextPingHeat);
-			logger.debug("Set pingheat of (rowNode, colNode): (" + rowNode.getNodeName() + ", " + colNode.getNodeName() + 
-					") to:" + nextPingHeat.getPingHeat());
+//			logger.info("Set pingheat of (rowNode, colNode): (" + rowNode.getNodeName() + ", " + colNode.getNodeName() + 
+//					") to:" + nextPingHeat.getPingHeat());
 			
 		}
 	}

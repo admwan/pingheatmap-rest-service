@@ -164,7 +164,7 @@ public class PingMsgReader {
 		// tokens[0]: lastPingDate; tokens[1]: PingOrig (nodeName); tokens[3] pingDest;
 		// tokens[5]
 
-		LOGGER.info(" [x] Received '" + pingQm + "'");
+		LOGGER.debug(" [x] Received '" + pingQm + "'");
 		String delims = ";";
 		String[] tokens = pingQm.split(delims);
 
