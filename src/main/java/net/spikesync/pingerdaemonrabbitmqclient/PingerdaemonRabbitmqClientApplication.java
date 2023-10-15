@@ -44,7 +44,7 @@ public class PingerdaemonRabbitmqClientApplication {
  				while (true) {
  				devPingApp.pingHeatMap.coolDownPingHeat();
 					try {
-						Thread.sleep(8000);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -73,7 +73,7 @@ public class PingerdaemonRabbitmqClientApplication {
 				this.pingHeatMap.setPingHeat(newPingEnties);
 			}
 				try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

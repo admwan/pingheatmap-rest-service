@@ -29,9 +29,15 @@ public class PingHeatData {
 	
 	public Date getLastPingAttempt() { return this.lastPingAttempt; }
 	
-	public Date getLastPingSucces() { return this.lastPingSuccess; }
+	public Date getLastPingSuccess() { return this.lastPingSuccess; }
 	
 	public Date getLastPingFailure() { return this.lastPingFailure; }
+	
+	public void setLastPingAttempt (Date timeLastPingAttempt) { this.lastPingAttempt = timeLastPingAttempt; }
+	
+	public void setLastPingSuccess(Date timeLastPingSuccess) { this.lastPingSuccess = timeLastPingSuccess; }
+	
+	public void setLastPingFailure(Date timeLastPingFailure) { this.lastPingFailure = timeLastPingFailure; }
 	
 	public void setPingHeat(PINGHEAT heat) {
 		this.pingHeat = heat;
