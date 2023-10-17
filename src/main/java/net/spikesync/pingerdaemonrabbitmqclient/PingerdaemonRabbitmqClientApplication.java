@@ -43,6 +43,7 @@ public class PingerdaemonRabbitmqClientApplication {
  			public void run() {
  				while (true) {
  				devPingApp.pingHeatMap.coolDownPingHeat();
+ 				devPingApp.pingHeatMap.printPingHeatMap();
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {

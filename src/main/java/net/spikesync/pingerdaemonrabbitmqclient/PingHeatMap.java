@@ -34,21 +34,14 @@ public class PingHeatMap {
 			pingHeatMap.put(rowNode, colEntry);
 
 			for (SilverCloudNode colNode : sc.getScNodes()) {
+				/*
+				 * Put a new column entry into the current row of the pingHeatMap, i.e., an
+				 * entry in the row-HashMap. Call PingHeat constructor with the one argument
+				 * constructor PINGHEAT.UNKNOWN, the date values are set to null! Test on the
+				 * PINGHEAT status te determine ping heat cooldown in that method.
+				 */
 
-				// Put a new column entry into the current row of the pingHeatMap, i.e., an
-				// entry in the row-HashMap.
-				colEntry.put(new SilverCloudNode(colNode), new PingHeatData(PingEntry.PINGHEAT.UNKNOWN)); // The default
-																											// meaningless
-																											// value of
-																											// -1 is the
-																											// default
-																											// and means
-																											// there is
-																											// no real
-																											// value for
-																											// the ping
-																											// heat.
-
+				colEntry.put(new SilverCloudNode(colNode), new PingHeatData(PingEntry.PINGHEAT.UNKNOWN));
 				logger.debug("New column Entry: " + colNode.toString());
 				logger.debug("Putting Node " + rowNode.getNodeName() + ", " + colNode.getNodeName() + " in PingHeatMap"
 						+ " -- col, row: (" + colCount + ", " + rowCount + ") ");
@@ -62,6 +55,8 @@ public class PingHeatMap {
 			rowCount++; // Increment the column number
 			colCount = 0; // Start a new column and set it to index 0
 		}
+		logger.debug("Size of the PingHeatMatrix rows: " + this.pingHeatMap.size() + ", columns: "
+				+ this.pingHeatMap.keySet().size());
 	}
 
 	// Change to private access when the class is working properly
@@ -69,65 +64,98 @@ public class PingHeatMap {
 		return pingHeatMap;
 	}
 
-	public PingHeatData getPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
-		// HashMap<SilverCloudNode, Integer> row = pingHeatMap.get(rowNode);
-		// logger.debug("pingHeatMap contains node: " + rowNode.getNodeName() + ", yes?
-		// " + pingHeatMap.containsKey(rowNode));
-		// logger.debug("##################@@@@@@@@@@@@@@@@@@@@@@ Value of rownode: " +
-		// row.toString());
+	// Added a bunch of getters and constructors for debugging. This replaces the
+	// getters and setters from
+	// PingHeatData. Previously, I only retrieved the PingHeatData object and worked
+	// that, now I'm doing it
+	// from PingHeatMap itself. This should eliminate a layer on indirection that
+	// possibly causes errors.
 
-		// Integer heat = pingHeatMap.get(rowNode).get(colNode);
-		// logger.debug("pingHeat of nodes " + rowNode.getNodeName() + ", " +
-		// rowNode.getNodeName() + ": " + heat);
-		return pingHeatMap.get(rowNode).get(colNode);
+	public PINGHEAT getPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode) {
+		return this.pingHeatMap.get(rowNode).get(colNode).getPingHeat();
+	}
+
+	public Date getLastTimeSuccesfulPing(SilverCloudNode rowNode, SilverCloudNode colNode) {
+		return this.pingHeatMap.get(rowNode).get(colNode).getLastPingSuccess();
+	}
+
+	public Date getLastTimeFailedPing(SilverCloudNode rowNode, SilverCloudNode colNode) {
+		return this.pingHeatMap.get(rowNode).get(colNode).getLastPingFailure();
+	}
+
+	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PINGHEAT pingHeat) {
+		PingHeatData pingHeatData = pingHeatMap.get(rowNode).get(colNode);
+		pingHeatData.setPingHeat(pingHeat);
+	}
+
+	public void setLastTimePingSucceeded(SilverCloudNode rowNode, SilverCloudNode colNode, Date pingSuccessDate) {
+		PingHeatData pingHeatData = pingHeatMap.get(rowNode).get(colNode);
+		pingHeatData.setLastPingSuccess(pingSuccessDate);
+	}
+
+	public void setLastTimePingFailed(SilverCloudNode rowNode, SilverCloud colNode, Date pingFailedDate) {
+		@SuppressWarnings("unlikely-arg-type")
+		PingHeatData pingHeatData = pingHeatMap.get(rowNode).get(colNode);
+		pingHeatData.setLastPingSuccess(pingFailedDate);
 	}
 
 	public void coolDownPingHeat() {
 		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
-
 				/*
 				 * The simplest coolDown is to lower the temperature at each call, but that's
 				 * too crude colNode.setValue(new
 				 * PingHeatData(PingEntry.getColderHeat(colNode.getValue().getPingHeat()))); //
 				 * PINGHEAT is now embedded in PingHeatData, so first construct a new instance
 				 * of PingHeatData with the new value of PINGHEAT, and than put the PingHeatData
-				 * instance into the column!
+				 * instance into the column! For cooldown to work properly, there has to be at
+				 * least one ping attempt, and it should be EITHER successful or failed.
+				 * 
 				 */
 				long currentMillis = new Date().getTime();
-				PingHeatData cellHeatData = colNode.getValue();
-				long lastSuccessfulPing = -1;
-				if(cellHeatData.getLastPingSuccess() != null)
-					lastSuccessfulPing = colNode.getValue().getLastPingSuccess().getTime();
+				Date lastSuccuessFulPingDate = getLastTimeSuccesfulPing(rowNode.getKey(), colNode.getKey());
+				if (lastSuccuessFulPingDate != null) {
 
-				/*
-				 * For cooldown to work properly, there has to be at least one ping attempt, and
-				 * it should be EITHER successful or failed.
-				 */
-				if (cellHeatData.getLastPingSuccess() != null) {
-					long successfulPingMillis = cellHeatData.getLastPingSuccess().getTime();
-					if ((currentMillis - successfulPingMillis > 5000)) {
-						colNode.setValue(new PingHeatData(PingEntry.getColderHeat(cellHeatData.getPingHeat())));
-						// The successful ping was longer than 3 seconds ago
+					if (((currentMillis - lastSuccuessFulPingDate.getTime()) % 6000 >= 5000)) {
+						PingHeatData pingHeatData = colNode.getValue();
+						PINGHEAT currentPingHeat = colNode.getValue().getPingHeat();
+						pingHeatData.setPingHeat(PingEntry.getColderHeat(currentPingHeat));
+
+						// This is the old method, but replacing cell entries is potentially a risk
+						// unless
+						// you clone the current cell, which is unnecessary and inefficient.
+						// colNode.setValue(new
+						// PingHeatData(PingEntry.getColderHeat(cellHeatData.getPingHeat())));
+
+						/*
+						 * DEBUGGING temperatures
+						 * 
+						 * if (lastSuccessfulPing > 0) { logger.
+						 * debug("Last difference modulo 5000 between [successFulPingMillis, currentTime] of node ("
+						 * + rowNode.getKey().getNodeName() + ", " + colNode.getKey().getNodeName() +
+						 * "): [" + ((currentMillis - lastSuccessfulPing)%5000) + "]"); } if
+						 * (lastSuccessfulPing == -1) { logger.debug("Last Ping FAILURE of node (" +
+						 * rowNode.getKey().getNodeName() + ", " + colNode.getKey().getNodeName() +
+						 * ") is NULL!!! "); }
+						 */
 					}
 				}
-				// DEBUGGING temperatures
-
-				if (lastSuccessfulPing > 0) {
-					logger.debug("Last difference between [successFulPingMillis, currentTime] of node (" + 
-				rowNode.getKey().getNodeName() + 
-				", " +  colNode.getKey().getNodeName() + "): ["  +  (currentMillis - lastSuccessfulPing)  + "]");
-				}
-//				if (cellHeatData.getLastPingFailure() == null) {
-//					logger.debug("Last Ping FAILURE of node (" + rowNode.getKey().getNodeName() + ", "
-//							+ colNode.getKey().getNodeName() + ") is NULL!!! ");
-//				}
-//
-				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
-						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());
-
 			}
 		}
+	}
+
+	public void printPingHeatMap() {
+		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
+			int countCells = 0;
+			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
+				++countCells;
+				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
+						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat()
+						+ "    --- cellCounter: " + countCells);
+			}
+		}
+		logger.debug(" --------------------------------------------------------------------------------------------- ");
+
 	}
 
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PingHeatData heat) {
@@ -138,28 +166,15 @@ public class PingHeatMap {
 		for (PingEntry pingEntry : pingEntries) {
 			SilverCloudNode rowNode = pingEntry.getPingOrig();
 			SilverCloudNode colNode = pingEntry.getPingDest();
-			PingHeatData currentPingHeat = getPingHeat(rowNode, colNode); // How to get the next warmer value of
-																			// PINGHEAT on pinguccess??
-
-			PingHeatData nextPingHeat;
-
+			PINGHEAT currentPingHeat = this.getPingHeat(rowNode, colNode);
 			if (pingEntry.getLastPingResult().equals(PingEntry.PINGRESULT.PINGSUCCESS)) {
-				//Date now = new Date();
-				nextPingHeat = new PingHeatData(PingEntry.getWarmerHeat(currentPingHeat.getPingHeat()));
-				nextPingHeat.setLastPingSuccess(pingEntry.getLastPingDate());
-				//In the new PingHeat entry, the lastPingFailure value has to be copied from the old one!!!
-				nextPingHeat.setLastPingFailure(getPingHeat(rowNode,colNode).getLastPingFailure());
-				setPingHeat(rowNode, colNode, nextPingHeat);
+				this.setPingHeat(rowNode, colNode, PingEntry.getWarmerHeat(currentPingHeat));
+				this.setLastTimePingSucceeded(rowNode, colNode, pingEntry.getLastPingDate());
 			}
 
 			else if (pingEntry.getLastPingResult().equals(PINGRESULT.PINGFAILURE)) {
-				//Date now = new Date();
-				nextPingHeat = new PingHeatData(PingEntry.getColderHeat(currentPingHeat.getPingHeat()));
-				nextPingHeat.setLastPingFailure(pingEntry.getLastPingDate());
-				//In the new PingHeat entry, the lastPingSuccess value has to be copied from the old one!!!
-				nextPingHeat.setLastPingSuccess(getPingHeat(rowNode,colNode).getLastPingSuccess());
-				setPingHeat(rowNode, colNode, nextPingHeat);
-
+				this.setPingHeat(rowNode, colNode, PingEntry.getColderHeat(currentPingHeat));
+				this.setLastTimePingSucceeded(rowNode, colNode, pingEntry.getLastPingDate());
 			}
 			// If there is no PINGSUCCESS or PINGFAILURE, the status of the pingHeat and all
 			// of the dates remain unchanged.

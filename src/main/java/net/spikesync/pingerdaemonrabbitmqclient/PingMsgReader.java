@@ -49,24 +49,7 @@ public class PingMsgReader {
 		this.rabbitMQ = rq;
 	}
 
-//	public SilverCloud getSilverCloud() {
-//		return this.silverCloud;
-//	}
-//
-//	public AmqpTemplate getAmqpTemplate() {
-//		return this.amqpTemplate;
-//	}
-//
-	/*
-	 * public static void main(String args[]) { ApplicationContext context = new
-	 * GenericXmlApplicationContext(
-	 * "classpath:META-INF/spring/silvercloud/pingmsgcollector-context.xml");
-	 * SilverCloud sc = context.getBean(SilverCloud.class); AmqpTemplate amqp =
-	 * context.getBean(AmqpTemplate.class); CachingConnectionFactory cCfact =
-	 * context.getBean(CachingConnectionFactory.class); Queue rmq =
-	 * context.getBean(Queue.class); PingMsgReader msgR = new
-	 * PingMsgReader(sc,amqp,cCfact,rmq); msgR.connectPingMQ(context); }
-	 */
+
 
 	public boolean connectPingMQ() {
 		if (this.connection == null) {
@@ -93,31 +76,7 @@ public class PingMsgReader {
 		
 	}
 
-	/*
-	 * public void connectPingMQ(ApplicationContext context) {
-	 * 
-	 * CachingConnectionFactory factory =
-	 * context.getBean(CachingConnectionFactory.class); connection = null; channel =
-	 * null; rabbitMQ = null; try { this.connection = (Connection)
-	 * factory.createConnection(); channel = (Channel)
-	 * connection.createChannel(false); rabbitMQ = context.getBean(Queue.class);
-	 * channel.queueDeclare(rabbitMQ.getName(), false, false, false, null);
-	 * 
-	 * this.amqpTemplate = context.getBean(AmqpTemplate.class);
-	 * 
-	 * if (this.amqpTemplate == null) { LOGGER.error(
-	 * "Could not instantiate AmqpTemplate in PingMsgReader!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!"
-	 * ); }
-	 * 
-	 * } catch (Exception e1) { e1.printStackTrace(); System.exit(0); } }
-	 */
-
-	// In silvercloud-pingermatrix-spring-ajax-integrated this class isn't
-	// instantiated as Bean, and all the elements need to be fetched or
-	// constructed!!
-	// That is soooo UN-Spring and ...
-	// In the project pingerdaemon-rabbitmq-client all the necessary dependencies
-	// are present when the bean is instantiated.
+	
 	public ArrayList<PingEntry> createPingEntriesFromRabbitMqMessages() {
 
 		long nOfWaitingMsgs = 0;
