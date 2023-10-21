@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring Boot INCLUDED!! -->
+<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring Boot
+INCLUDED!! -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -20,7 +21,14 @@
 	</properties>
 	<dependencies>
 
-		<!-- Dependency on spring-context is not necessary if the project has spring-boot-starter-parent as parent 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+
+		<!-- Dependency on spring-context is not necessary if the project has
+		spring-boot-starter-parent as parent 
 		https://mvnrepository.com/artifact/org.springframework/spring-context 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -52,7 +60,8 @@
 		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
 	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
-<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that works for both versions with or without the spring-boot parent! 
+		<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
+		works for both versions with or without the spring-boot parent! 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -69,16 +78,17 @@
 			<version>2.20.0</version>
 		</dependency>
  -->
- 
- <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 
-		This dependency pulls in slf4j-api!!! See: https://mkyong.com/logging/slf4j-logback-tutorial/ -->
-	<dependency>
-	    <groupId>ch.qos.logback</groupId>
-	    <artifactId>logback-classic</artifactId>
-	    <version>1.4.11</version>
-	</dependency>
- 
- 
+
+		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 
+		This dependency pulls in slf4j-api!!! See:
+		https://mkyong.com/logging/slf4j-logback-tutorial/ -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.4.11</version>
+		</dependency>
+
+
 		<!--
 		https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
 		<dependency>
