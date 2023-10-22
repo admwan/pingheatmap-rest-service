@@ -23,10 +23,15 @@ public class PingHeatMapController {
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapController.class);
 
 	@Autowired
-	private PingHeatMap pingHeatMap;
+	private final PingHeatMap pingHeatMap;
 
+	
 	public PingHeatMapController(PingHeatMap piHeMa) {
 		pingHeatMap = piHeMa;
+		
+	}
+	
+	public startUpdatePiHeMa() {
 		
 	}
 	
@@ -38,6 +43,15 @@ public class PingHeatMapController {
 	}
 	
 	@Autowired
+	@PostMapping("/stringifiedheatmap")
+	public String getStringifiedHeatMap() {
+		String returnString = pingHeatMap.getHeatMapAsString();
+		logger.debug("Stringified pingHeatMap: " + returnString);
+		return returnString;
+	}
+	
+	
+	@Autowired
 	@PostMapping("/lastcaptpingdate")
 	public Date getLastCaptPingUpdate() {
 		SilverCloudNode captNode = new SilverCloudNode("CAPTUW","192.168.50.104");
@@ -46,4 +60,10 @@ public class PingHeatMapController {
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Date of the last CAPTUW-THORFW successful ping that should be returned is: " + lastCaptThorPing);
 		return lastCaptThorPing;
 	}
+	
+	public PingHeatMap getPingHeatMapObject() {
+		return this.pingHeatMap;
+	}
+
+
 }

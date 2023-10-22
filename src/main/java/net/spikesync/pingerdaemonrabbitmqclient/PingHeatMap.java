@@ -59,9 +59,9 @@ public class PingHeatMap {
 				+ this.pingHeatMap.keySet().size());
 	}
 
-	// Change to private access when the class is working properly
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatmap() {
-		logger.debug("**************************&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Now returning pingHeatMap: " + this.pingHeatMap.toString());
+		logger.debug("**************************&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Now returning pingHeatMap: "
+				+ this.pingHeatMap.toString());
 		return pingHeatMap;
 	}
 
@@ -145,14 +145,27 @@ public class PingHeatMap {
 		}
 	}
 
+	public String getHeatMapAsString() {
+		String foHeMa = "";
+		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
+			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
+				foHeMa += "(" + rowNode.getKey().getNodeName() + ", " + colNode.getKey().getNodeName()
+						+ "): [pingHeat: " + colNode.getValue().getPingHeat() + "]\n";
+
+			}
+		}
+
+		return foHeMa;
+	}
+
 	public void printPingHeatMap() {
 		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
-			int countCells = 0;
+			// int countCells = 0;
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
-				++countCells;
+				// ++countCells;
 				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
-						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat()
-						+ "    --- cellCounter: " + countCells);
+						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());
+				// + " --- cellCounter: " + countCells);
 			}
 		}
 		logger.debug(" --------------------------------------------------------------------------------------------- ");
