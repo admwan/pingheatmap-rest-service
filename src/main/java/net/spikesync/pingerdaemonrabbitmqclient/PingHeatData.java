@@ -47,6 +47,19 @@ public class PingHeatData {
 	}
 
 	@Override
+	public String toString() {
+		
+		String returnString = new String();
+		String currentPingHeat = this.pingHeat == null ? "NULLValue" : this.pingHeat.toString(); 
+		String currentLastSuccessDate = this.lastPingSuccess == null ? "NULLValue" : this.lastPingSuccess.toString();
+		String currentLastFailDate = this.lastPingFailure == null ? "NULLValue" : this.lastPingFailure.toString();
+		returnString = "[pingHeat," + currentPingHeat + "]," + 
+					"lastPingSuccess: " + currentLastSuccessDate + 
+					"], lastPingFailure: " + currentLastFailDate + "]";
+		return returnString;
+		
+	}
+	@Override
 	public boolean equals(Object other) {
 		super.equals(other);
 

@@ -61,6 +61,7 @@ public class PingHeatMap {
 
 	// Change to private access when the class is working properly
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatmap() {
+		logger.debug("**************************&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Now returning pingHeatMap: " + this.pingHeatMap.toString());
 		return pingHeatMap;
 	}
 
