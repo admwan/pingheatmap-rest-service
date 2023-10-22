@@ -22,41 +22,46 @@ import net.spikesync.api.PingHeatMapController;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
-@ImportResource(locations = {"classpath:beans.xml"})
+@ImportResource(locations = {"classpath:beans.xml" })
 @SpringBootApplication
 public class PingerdaemonRabbitmqClientApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
-	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
-	private PingMsgReader pingMsgReader;
+	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
+//	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
+/*	private PingMsgReader pingMsgReader;
 	private PingHeatMap pingHeatMap;
 	private PingHeatMapController pingHeatMapController;
-    
+*/
 	
-	public PingerdaemonRabbitmqClientApplication(PingMsgReader piMsRe, PingHeatMap piHeMa, PingHeatMapController piHeMaCo) {
-	   	this.pingMsgReader = piMsRe;
-    	this.pingHeatMap = piHeMa;
-    	this.pingHeatMapController = piHeMaCo;
+/*	public PingerdaemonRabbitmqClientApplication(PingMsgReader piMsRe, PingHeatMap piHeMa,
+		PingHeatMapController piHeMaCo) {
+		this.pingMsgReader = piMsRe;
+		this.pingHeatMap = piHeMa;
+		this.pingHeatMapController = piHeMaCo;
 
 	}
-	
-    public static void main(String[] args) {
-    	SpringApplication  springDevPingApp = new SpringApplication(PingerdaemonRabbitmqClientApplication.class);
-    	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication(null,null,null);
-       	devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
-    	devPingApp.pingHeatMap = devPingApp.context.getBean(PingHeatMap.class);
-
-    	springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8098"));
-    	springDevPingApp.run(args);
-    	
-    	
+*/
+	public static void main(String[] args) {
+  
  		Properties prop = PropertiesLoader.loadProperties();
  		if(prop == null) 
  			logger.debug("************** ========= Properties not loaded! Check the name of the properties file! ************** ========= ");
  		else 
  			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "  + prop.getProperty("test-silvercloud-scnodes"));
+	
+		SpringApplication  springDevPingApp = new SpringApplication(PingerdaemonRabbitmqClientApplication.class);
+  /*	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication(null,null,null);
+        devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
+    	devPingApp.pingHeatMap = devPingApp.context.getBean(PingHeatMap.class);
+  */  	
+
+    	springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8098"));
+    	springDevPingApp.run(args);
+    	
+	}
+}
   
- 		Runnable r1 = new Runnable() { 
+ /*		Runnable r1 = new Runnable() { 
  			public void run() {
  				devPingApp.readRmqAndUpdatePingHeatMap(args);
  			}
@@ -80,8 +85,10 @@ public class PingerdaemonRabbitmqClientApplication {
  		};
  		new Thread(r2).start();
     }
+*/
 
-    public void readRmqAndUpdatePingHeatMap(String... args) {
+
+  /*  public void readRmqAndUpdatePingHeatMap(String... args) {
         
         for (int i = 0; i < args.length; ++i) {
             logger.info("args[{}]: {}", i, args[i]);
@@ -105,6 +112,5 @@ public class PingerdaemonRabbitmqClientApplication {
 			}
 			
 		}
-    }
-}
+    }*/
 
