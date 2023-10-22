@@ -31,8 +31,8 @@ public class PingHeatMapController {
 		
 	}
 	
-	public startUpdatePiHeMa() {
-		
+	public void startUpdatePiHeMa() {
+		/* TBD ...................... */
 	}
 	
 	@Autowired
