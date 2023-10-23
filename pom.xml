@@ -55,6 +55,13 @@ INCLUDED!! -->
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+
 
 		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
 	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->

@@ -1,5 +1,6 @@
 package net.spikesync.api;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingHeatData;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
+
+import com.fasterxml.jackson.databind.ObjectMapper;  
 
 @RestController
 @RequestMapping(path = "/", produces = "application/json")
@@ -88,7 +91,7 @@ public class PingHeatMapController {
 	
 	// The following two methods that start the update threads are *automatically* called when creating an instance
 	// of this class! How is that possible?
-	@Autowired
+//	@Autowired
 	@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
 		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapUpdateThread ...");
@@ -119,6 +122,25 @@ public class PingHeatMapController {
 		String returnString = pingHeatMap.getHeatMapAsString();
 		logger.debug("Stringified pingHeatMap: " + returnString);
 		return returnString;
+	}
+
+	@Autowired
+	@PostMapping("/jsonpingheatmap")
+	public String getjsonPingHeatMap() {
+		logger.debug("Now returning pingHeatMap as HashMap converted to JSON --- REST API method getPingHeatMap");
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonPiHeMa = "";
+		try {
+			
+			jsonPiHeMa = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pingHeatMap);
+					
+		}
+		catch (IOException e){
+			e.printStackTrace();
+			logger.debug("pinHeatMap can NOT be converted into JSON!!!! Returning a stringified pingHeatMap instead!!!!!!!");
+			return getStringifiedHeatMap();
+		}
+		return jsonPiHeMa;
 	}
 
 	@Autowired
