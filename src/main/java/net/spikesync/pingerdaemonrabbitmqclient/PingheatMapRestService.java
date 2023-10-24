@@ -24,9 +24,9 @@ import net.spikesync.api.PingHeatMapController;
 @EnableAutoConfiguration
 @ImportResource(locations = { "classpath:beans.xml" })
 @SpringBootApplication
-public class PingerdaemonRabbitmqClientApplication {
+public class PingheatMapRestService {
 
-	private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(PingheatMapRestService.class);
 
 	public static void main(String[] args) {
 
@@ -38,7 +38,7 @@ public class PingerdaemonRabbitmqClientApplication {
 			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "
 					+ prop.getProperty("test-silvercloud-scnodes"));
 
-		SpringApplication springDevPingApp = new SpringApplication(PingerdaemonRabbitmqClientApplication.class);
+		SpringApplication springDevPingApp = new SpringApplication(PingheatMapRestService.class);
 		springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8098"));
 		springDevPingApp.run(args);
 
