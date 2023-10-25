@@ -24,9 +24,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
 
-public class PingMsgReader {
+public class PingMsgProducer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PingMsgReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PingMsgProducer.class);
 
 	CachingConnectionFactory factory;
 	Connection connection = null;
@@ -40,7 +40,7 @@ public class PingMsgReader {
 
 	// This constructor is NEW compared to the one in
 	// silvercloud-pingermatrix-spring-ajax-integrated!!
-	public PingMsgReader(SilverCloud sc, AmqpTemplate template, CachingConnectionFactory fact, Queue rq) {
+	public PingMsgProducer(SilverCloud sc, AmqpTemplate template, CachingConnectionFactory fact, Queue rq) {
 		LOGGER.debug(
 				"================== Instantiating PingMsgReader with 4 argument constructor!!!! =====================");
 		this.silverCloud = sc;

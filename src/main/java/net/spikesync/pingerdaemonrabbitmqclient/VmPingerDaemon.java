@@ -13,16 +13,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 
-public class PingerdaemonRabbitmqClientApplication {
+public class VmPingerDaemon {
 
-    private static final Logger logger = LoggerFactory.getLogger(PingerdaemonRabbitmqClientApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(VmPingerDaemon.class);
 	private ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
-	private PingMsgReader pingMsgReader;
+	private PingMsgProducer pingMsgProducer;
 	private PingHeatMap pingHeatMap;
     
     public static void main(String[] args) {
-    	PingerdaemonRabbitmqClientApplication devPingApp = new PingerdaemonRabbitmqClientApplication();
-    	devPingApp.pingMsgReader = devPingApp.context.getBean(PingMsgReader.class);
+    	VmPingerDaemon devPingApp = new VmPingerDaemon();
+    	devPingApp.pingMsgProducer = devPingApp.context.getBean(PingMsgProducer.class);
     	devPingApp.pingHeatMap = devPingApp.context.getBean(PingHeatMap.class);
     	
     	
@@ -68,9 +68,9 @@ public class PingerdaemonRabbitmqClientApplication {
         // In this project everything needed by PingMsgReader is injected at bean-construction time, so it is ready to be used!
         while(true) {
         	boolean connectionEstablished;
-			connectionEstablished = this.pingMsgReader.connectPingMQ();
+			connectionEstablished = this.pingMsgProducer.connectPingMQ();
 			if(connectionEstablished) {
-				ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
+				ArrayList<PingEntry> newPingEnties = this.pingMsgProducer.createPingEntriesFromRabbitMqMessages();
 				this.pingHeatMap.setPingHeat(newPingEnties);
 			}
 				try {

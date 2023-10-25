@@ -16,11 +16,8 @@
 		<constructor-arg ref="scNodeIpMap" />
 	</bean>
 	
-	<bean id="pingHeatMap" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap">
-		<constructor-arg ref="silverCloud"/>
-	</bean>
-	
-	<bean id="pingMsgReader" class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader">
+		
+	<bean id="pingMsgProducer" class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgProducer">
 		<constructor-arg index="0" ref="silverCloud"/>
 		<constructor-arg index="1" ref="amqpTemplate"/>
 		<constructor-arg index="2" ref="connectionFactory"/>
