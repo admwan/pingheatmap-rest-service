@@ -32,14 +32,6 @@
 		<constructor-arg index="1" ref="pingHeatMap"/>
 	</bean>
 
-<!-- 
-	<bean id="pingerdaemonRabbitmqClientApplication" class="net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication">
-		<constructor-arg index="0" ref="pingMsgReader"/>
-		<constructor-arg index="1" ref="pingHeatMap"/>
-		<constructor-arg index="2" ref="pingHeatMapController"/>
-	</bean>
- -->	
-	
 	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="SURFIE" value="192.168.50.100" />
