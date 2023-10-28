@@ -133,10 +133,6 @@
 						</execution>
 					</executions>
 					<!-- the configuration element must be OUTSIDE the element executions!! -->
-					<configuration>
-						<mainClass>
-							net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
-					</configuration>
 				</plugin>
 
 			</plugins>

@@ -32,6 +32,7 @@ public class PingMsgProducer {
 	Connection connection = null;
 	Channel channel = null;
 	Queue rabbitMQ = null;
+	ArrayList<PingEntry> pingEntries = null;
 
 	private SilverCloud silverCloud;
 	private AmqpTemplate amqpTemplate;

@@ -39,7 +39,7 @@
       	</appender>
 
   
-		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap">
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
 			<level value="DEBUG"/>
 			
 		</logger>
