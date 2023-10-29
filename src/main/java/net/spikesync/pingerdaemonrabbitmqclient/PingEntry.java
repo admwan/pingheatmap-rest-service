@@ -114,7 +114,7 @@ public class PingEntry implements Cloneable {
 		
 		DateFormat format = new SimpleDateFormat(
                 "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-		return format.format(this.lastPingDate) + ";" + this.pingOrig +  ";" + this.pingDest + ";" +  this.lastPingResult + ";" +  this.pingHeat;
+		return format.format(this.lastPingDate) + ";" + this.pingOrig +  ";" + this.pingDest + ";" +  this.lastPingResult + ";" +  this.pingHeat + "\n";
 	}	
 }
 

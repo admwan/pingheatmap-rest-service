@@ -13,17 +13,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-public class PingDaemon { //implements Runnable {
+public class PingDaemon implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(PingDaemon.class);
 
 	private SilverCloud silverCloud;
 	private SilverCloudNode thisNode;
-	
+
 	public PingDaemon(SilverCloud siCl) {
 		this.silverCloud = siCl;
 	}
-	
+
 	public PingDaemon(SilverCloudNode thNo, SilverCloud siCl) {
 		this.thisNode = thNo;
 		this.silverCloud = siCl;
@@ -44,7 +44,7 @@ public class PingDaemon { //implements Runnable {
 					+ "\nExiting ...");
 			System.exit(1);
 		}
-	//	pingDaemon.run();
+		pingDaemon.run();
 
 		((AbstractApplicationContext) context).close();
 	}
@@ -52,7 +52,7 @@ public class PingDaemon { //implements Runnable {
 	private void setThisNode(String thisNodeString) {
 
 		this.thisNode = this.silverCloud.getNodeByName(thisNodeString);
-		
+
 		if (this.thisNode == null) {
 			logger.error("The specified node is not an ACTIVE node!\n"
 					+ "----Please specify one of the following nodes or modify the list of active nodes in silvercloud-context.xml:\n ");
@@ -61,34 +61,28 @@ public class PingDaemon { //implements Runnable {
 			});
 
 			System.exit(1);
-		}
-		else logger.debug("---------- Specified node in the call to main(String node) exists - and is instantiated as: " + this.thisNode.toString());
+		} else
+			logger.debug("---------- Specified node in the call to main(String node) exists - and is instantiated as: "
+					+ this.thisNode.toString());
 	}
-/*
+
 	@Override
 	public void run() {
-		pinger = null;
-		Thread pingerThread = null;
-		ArrayList<Thread> pingerThreads = new ArrayList<Thread>();
-
-		List<Pinger> pingerList = new LinkedList<Pinger>();
-		// For each peer Node build a Pinger object and start a thread for it.
-		for (Map.Entry<SilvercloudNode, String> destNode : this.scNodeList.entrySet()) {
-
-			// In the implementation of Pinger.pintDest() information about opening a port
-			// on Node itself can give useful information
-			pinger = new Pinger(this.scNodeList.get(this.thisNode), destNode.getValue(), thisNode, destNode.getKey());
-
-			pingerList.add(pinger); // A very elaborate - but safe way to obtain the IP address of this node.
-			// Note that the assumption that there is only one IP address per node is in
-			// effect here (so we only need one <code>for</code> loop).
-
-			logger.debug("Added pinger OrigIp: " + pinger.getOrigIp() + ", DestIp: " + pinger.getDestIp()
-					+ ", OrigScNode: " + pinger.getOrigScNode() + ", DestScNode: " + pinger.getDestScNode());
-			pingerThread = new Thread(pinger);
-			pingerThreads.add(pingerThread);
-			pingerThread.start();
-
+		SilverCloudNode captNode = this.silverCloud.getNodeByName("CAPTUW");
+		VmPinger vmPinger = new VmPinger(this.thisNode, captNode);
+		Thread pingerThread = new Thread(vmPinger);
+		pingerThread.start();
+		while (true) {
+			logger.debug("Current list of PingEntry's after retrieving them from the VmPinger object:\n "
+					+ vmPinger.getPingEntries().toString());
+			vmPinger.clearPingEntries();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-	} */
+
+	}
 }
