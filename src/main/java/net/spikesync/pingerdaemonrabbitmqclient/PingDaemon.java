@@ -8,6 +8,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+/*
+ * The PingDaemon pings all the nodes defined in the SilverCloud Bean (beans.xml). It instantiates a VmPinger object for 
+ * each node that is being pinged and puts the result in a PingEntry that, in turn, gets added to an ArrayList
+ * of PingEntry's. The PingDeamon's run() method creates a Thread for each VmPinger object and starts it. In the 
+ * indefinite loop inside run() the list of PingEntry's of each VmPinger object is retrieved and printed to the log. 
+ * TBD replace printing the list of PingEntry's by writing them to the RabbitMQ.
+ */
+
 public class PingDaemon implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(PingDaemon.class);
@@ -84,7 +92,7 @@ public class PingDaemon implements Runnable {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				logger.error("Thread sleep interrupted!! This shouldn't happen.");
+				logger.error("Thread sleep interrupted!! This really shouldn't happen.");
 				e.printStackTrace();
 			}
 		}
