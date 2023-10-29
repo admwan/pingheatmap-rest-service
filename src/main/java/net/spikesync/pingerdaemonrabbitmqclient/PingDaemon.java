@@ -19,9 +19,15 @@ public class PingDaemon implements Runnable {
 
 	private SilverCloud silverCloud;
 	private SilverCloudNode thisNode;
+	private HashMap<String, VmPinger> vMpingObjectArray;
 
 	public PingDaemon(SilverCloud siCl) {
 		this.silverCloud = siCl;
+		this.vMpingObjectArray = new HashMap<String, VmPinger>();
+		silverCloud.getScNodes().forEach(silverCloudNode -> {
+			this.vMpingObjectArray.put(silverCloudNode.getNodeName(), new VmPinger(this.thisNode, silverCloudNode));
+		});
+
 	}
 
 	public PingDaemon(SilverCloudNode thNo, SilverCloud siCl) {
@@ -55,7 +61,7 @@ public class PingDaemon implements Runnable {
 
 		if (this.thisNode == null) {
 			logger.error("The specified node is not an ACTIVE node!\n"
-					+ "----Please specify one of the following nodes or modify the list of active nodes in silvercloud-context.xml:\n ");
+					+ "----Please specify one of the following nodes or modify the list of active nodes in beans.xml:\n ");
 			this.silverCloud.getScNodes().forEach((node) -> {
 				System.out.println(node + ", ");
 			});
@@ -68,21 +74,44 @@ public class PingDaemon implements Runnable {
 
 	@Override
 	public void run() {
-		SilverCloudNode captNode = this.silverCloud.getNodeByName("CAPTUW");
-		VmPinger vmPinger = new VmPinger(this.thisNode, captNode);
-		Thread pingerThread = new Thread(vmPinger);
-		pingerThread.start();
+		this.vMpingObjectArray.forEach((vmPingerNode, vmObject) -> {
+			Thread vmObjThread = new Thread(vmObject);
+			vmObjThread.start();
+			logger.debug("Started VM Pinger Thread for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode);
+		});
+
 		while (true) {
-			logger.debug("Current list of PingEntry's after retrieving them from the VmPinger object:\n "
-					+ vmPinger.getPingEntries().toString());
-			vmPinger.clearPingEntries();
+			this.vMpingObjectArray.forEach((vmPingerNode, vmPingObject) -> {
+				logger.debug("List of PingEntry's for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode
+						+ ": \n" + vmPingObject.getPingEntries());
+				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!
+			});
+
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				logger.error("Thread sleep interrupted!! This shouldn't happen.");
 				e.printStackTrace();
 			}
 		}
-
 	}
 }
+
+//SilverCloudNode captNode = this.silverCloud.getNodeByName("CAPTUW");
+//VmPinger vmPinger = new VmPinger(this.thisNode, captNode);
+//Thread pingerThread = new Thread(vmPinger);
+//pingerThread.start();
+
+// Start all the Threads in the SilverCloudNode - VmPinger HashMap
+
+//		while (true) {
+//			logger.debug("Current list of PingEntry's after retrieving them from the VmPinger object:\n "
+//					+ vmPinger.getPingEntries().toString());
+//			vmPinger.clearPingEntries();
+//			try {
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
