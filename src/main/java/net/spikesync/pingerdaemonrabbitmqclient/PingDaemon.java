@@ -1,14 +1,9 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
@@ -29,12 +24,6 @@ public class PingDaemon implements Runnable {
 		});
 
 	}
-
-	public PingDaemon(SilverCloudNode thNo, SilverCloud siCl) {
-		this.thisNode = thNo;
-		this.silverCloud = siCl;
-	}
-
 	public static void main(String[] args) {
 
 		ApplicationContext context = new GenericXmlApplicationContext("classpath:beans.xml");
@@ -74,6 +63,11 @@ public class PingDaemon implements Runnable {
 
 	@Override
 	public void run() {
+		/*
+		 * Before entering the indefinite ping-loop create Threads for all the VmPinger objects in the
+		 * vmPingObjectArray. The Threads are not stored anywhere because they don't need to be managed. The individual
+		 * vmPingObjects, however, need to be stored in order to access the PingEntry list they have collected. 
+		 */
 		this.vMpingObjectArray.forEach((vmPingerNode, vmObject) -> {
 			Thread vmObjThread = new Thread(vmObject);
 			vmObjThread.start();
@@ -84,7 +78,7 @@ public class PingDaemon implements Runnable {
 			this.vMpingObjectArray.forEach((vmPingerNode, vmPingObject) -> {
 				logger.debug("List of PingEntry's for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode
 						+ ": \n" + vmPingObject.getPingEntries());
-				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!
+				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!!
 			});
 
 			try {
@@ -97,21 +91,3 @@ public class PingDaemon implements Runnable {
 	}
 }
 
-//SilverCloudNode captNode = this.silverCloud.getNodeByName("CAPTUW");
-//VmPinger vmPinger = new VmPinger(this.thisNode, captNode);
-//Thread pingerThread = new Thread(vmPinger);
-//pingerThread.start();
-
-// Start all the Threads in the SilverCloudNode - VmPinger HashMap
-
-//		while (true) {
-//			logger.debug("Current list of PingEntry's after retrieving them from the VmPinger object:\n "
-//					+ vmPinger.getPingEntries().toString());
-//			vmPinger.clearPingEntries();
-//			try {
-//				Thread.sleep(2000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
