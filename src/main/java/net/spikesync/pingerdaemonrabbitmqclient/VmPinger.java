@@ -25,7 +25,7 @@ public class VmPinger implements Runnable {
 
 	private static int pingPort = 22;
 	private static int pingTimeout = 2000;
-	private static long threadSleep = 1000;
+	private static long threadSleep = 2000;
 	private static final Logger logger = LoggerFactory.getLogger(VmPinger.class);
 	
 	private SilverCloudNode origNode;
