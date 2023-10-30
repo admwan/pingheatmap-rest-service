@@ -1,5 +1,6 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -21,15 +22,16 @@ public class PingDaemon implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(PingDaemon.class);
 
 	private SilverCloud silverCloud;
+	private PingMsgProducer pingMsgProducer;
 	private SilverCloudNode thisNode;
 	private HashMap<String, VmPinger> vMpingObjectArray;
+	private ArrayList<PingEntry> pingEntriesAllVms;
 
-	public PingDaemon(SilverCloud siCl) {
+	public PingDaemon(SilverCloud siCl, PingMsgProducer piMsPr) {
 		this.silverCloud = siCl;
+		this.pingMsgProducer = piMsPr;
 		this.vMpingObjectArray = new HashMap<String, VmPinger>();
-		silverCloud.getScNodes().forEach(silverCloudNode -> {
-			this.vMpingObjectArray.put(silverCloudNode.getNodeName(), new VmPinger(this.thisNode, silverCloudNode));
-		});
+		this.pingEntriesAllVms = new ArrayList<PingEntry> ();
 
 	}
 	public static void main(String[] args) {
@@ -69,6 +71,10 @@ public class PingDaemon implements Runnable {
 					+ this.thisNode.toString());
 	}
 
+	private void sendPentriesRabbitMq() {
+		
+	}
+	
 	@Override
 	public void run() {
 		/*
@@ -76,6 +82,16 @@ public class PingDaemon implements Runnable {
 		 * vmPingObjectArray. The Threads are not stored anywhere because they don't need to be managed. The individual
 		 * vmPingObjects, however, need to be stored in order to access the PingEntry list they have collected. 
 		 */
+		
+		//Check if the SilverCloudNode's are valid!
+		if( (this.thisNode.getIpAddress() == null) || (this.thisNode.getNodeName() == null)) {
+			logger.error("The values of this node are invalid!!! Exiting!!");
+			System.exit(1);
+		}
+		silverCloud.getScNodes().forEach(silverCloudNode -> {
+			this.vMpingObjectArray.put(silverCloudNode.getNodeName(), new VmPinger(this.thisNode, silverCloudNode));
+		});
+
 		this.vMpingObjectArray.forEach((vmPingerNode, vmObject) -> {
 			Thread vmObjThread = new Thread(vmObject);
 			vmObjThread.start();
@@ -86,7 +102,16 @@ public class PingDaemon implements Runnable {
 			this.vMpingObjectArray.forEach((vmPingerNode, vmPingObject) -> {
 				logger.debug("List of PingEntry's for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode
 						+ ": \n" + vmPingObject.getPingEntries());
+				this.pingEntriesAllVms.addAll(vmPingObject.getPingEntries());
 				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!!
+				//logger.debug("--------------------------------------------------------------------------------------------------------");
+				//logger.debug("Current list of all PingEntry's waiting to be written to the RabbitMQ: "+ this.pingEntriesAllVms.toString());
+				this.pingMsgProducer.writePiEnToRabbitmq(this.thisNode, pingEntriesAllVms);
+				// Assuming that all entries are written to the RabbitMQ in good order, the list must be cleared.
+				// Note that this cannot be done in PingMsgProducer, because that will cause a concurrent access Exception: 
+				// The list of PingEntries is being tried to be modified by (several) different Threads, that - of course -
+				// causes inconsistencies. 
+				this.pingEntriesAllVms.clear();
 			});
 
 			try {

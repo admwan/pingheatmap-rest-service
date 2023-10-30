@@ -14,6 +14,7 @@
 	<bean id="pingDaemon"
 		class="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
 		<constructor-arg ref="silverCloud" />
+		<constructor-arg ref="pingMsgProducer"/>
 	</bean>
 
 	<bean id="silverCloud"
@@ -43,7 +44,9 @@
 
 	<rabbit:connection-factory
 		id="connectionFactory" virtual-host="SilverSurfieRMQH" username="thor"
-		password="7{3>d7Tg0dMA" host="192.168.50.107" port="5672" />
+		password="7{3>d7Tg0dMA" 
+		host="192.168.50.107" 
+		port="5672" />
 
 	<rabbit:template id="amqpTemplate"
 		connection-factory="connectionFactory" />
@@ -51,6 +54,7 @@
 	<rabbit:admin connection-factory="connectionFactory" />
 
 	<rabbit:queue id="silverCloudQueue"
-		name="SilverSurfieRMQHpingQueue" durable="false" />
+		name="SilverSurfieRMQHpingQueue" 
+		durable="false" />
 
 </beans>

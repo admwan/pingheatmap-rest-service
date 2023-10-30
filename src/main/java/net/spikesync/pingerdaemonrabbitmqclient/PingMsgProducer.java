@@ -26,7 +26,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
 
 public class PingMsgProducer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PingMsgProducer.class);
+	private static final Logger logger = LoggerFactory.getLogger(PingMsgProducer.class);
 
 	CachingConnectionFactory factory;
 	Connection connection = null;
@@ -42,7 +42,7 @@ public class PingMsgProducer {
 	// This constructor is NEW compared to the one in
 	// silvercloud-pingermatrix-spring-ajax-integrated!!
 	public PingMsgProducer(SilverCloud sc, AmqpTemplate template, CachingConnectionFactory fact, Queue rq) {
-		LOGGER.debug(
+		logger.debug(
 				"================== Instantiating PingMsgReader with 4 argument constructor!!!! =====================");
 		this.silverCloud = sc;
 		this.amqpTemplate = template;
@@ -54,7 +54,7 @@ public class PingMsgProducer {
 
 	public boolean connectPingMQ() {
 		if (this.connection == null) {
-			LOGGER.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
+			logger.debug("Trying to connect to the Rabbit Message Queue ----------------- ***************");
 			try {
 				this.connection = this.factory.createConnection();
 				this.channel = this.connection.createChannel(false);
@@ -62,13 +62,13 @@ public class PingMsgProducer {
 				// The test below should be moved to the test class. All the injected
 				// dependencies should be checked during testing, not here!
 				if (this.amqpTemplate == null) {
-					LOGGER.error(
+					logger.error(
 							"Could not instantiate AmqpTemplate in connectPingMQ!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
 				}
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
-				LOGGER.error("Failed to connect to RabbitMQ!! Is the RabbitMQ running?");
+				logger.error("Failed to connect to RabbitMQ!! Is the RabbitMQ running?");
 				return false;
 			}
 			return true; //this.connection was false, i.e., there was no connection yet, but now there is.
@@ -98,7 +98,7 @@ public class PingMsgProducer {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("Number of waiting messages in Queue: " + nOfWaitingMsgs);
+		logger.debug("Number of waiting messages in Queue: " + nOfWaitingMsgs);
 
 		Object onePingMessage;
 
@@ -109,14 +109,51 @@ public class PingMsgProducer {
 			if (onePingMessage != null) {
 				PingEntry newPingEntry = parsePingMessageProperly(onePingMessage.toString());
 				pingEntriesFromRmq.add(newPingEntry);
-				LOGGER.debug("Parsed Message: " + newPingEntry.toString());
+				logger.debug("Parsed Message: " + newPingEntry.toString());
 			} else
-				LOGGER.debug(
+				logger.debug(
 						"Message retrieved in PingMsgReader.updatePingHeatMap() is empty. NOT UPDATING pingHeatMap!");
 		}
 		return pingEntriesFromRmq;
 	}
 
+	/*
+	 * This message takes a list of PingEntry's, transforms them into a String that is written to the RabbitMQ
+	 * in the format specified.
+	 * <Date d>;<SilverCloudNode thisNode.getNodeName()>;<SilverCloudNode thisNode.getIPaddress()>;
+	 * <SilverCloudNode thatNode.getNodeName()>;<SilverCloudNode thatNode.getIPaddress()><;PINGRESULT.[value]>
+	 */
+	public void writePiEnToRabbitmq(SilverCloudNode thisNode, ArrayList<PingEntry> piEnLi) {
+		logger.debug("********************** PingMsgProducer object for this node: " + thisNode.getNodeName() + " "
+				+ "called with Ping Entry destination list size: " + piEnLi.size());
+		piEnLi.forEach(pingentry -> {
+			String stringFromPiE = stringifyPingEntry(pingentry);
+			/* TBD: put this in a JUnit test!!!!
+			logger.debug("String to be written to RabbitMQ: " + stringFromPiE);
+			PingEntry peConvertedBackFromString = parsePingMessageProperly(stringFromPiE);
+			logger.debug("Did the round-trip conversion work? " + peConvertedBackFromString.equals(pingentry));
+			*/
+			this.amqpTemplate.convertAndSend("SilverSurfieRMQHpingQueue",stringFromPiE);
+			//piEnLi.remove(pingentry); Don't remove the PingEntry's here or you'll get a concurrent access Exception!
+		});
+	}
+	
+	/*
+	 * This method creates a String from a PingEntry. This is more straightforward than parsing them, so this time
+	 * all the elements are just concatenated.
+	 * Example: [ Mon Oct 30 14:29:37 CET 2023;THORFW;192.168.50.107;HYDRFS;192.168.50.116;pingsuccess ]
+	 */
+	private String stringifyPingEntry(PingEntry piEn) {
+		String pingEntryString = piEn.getLastPingDate() + ";" +
+				piEn.getPingOrig().getNodeName() + ";" +
+				piEn.getPingOrig().getIpAddress() + ";" +
+				piEn.getPingDest().getNodeName() + ";" +
+				piEn.getPingDest().getIpAddress() + ";" +
+				piEn.getLastPingResult().toString().toLowerCase() + ";";
+		return pingEntryString;
+				
+	}
+	
 	private PingEntry parsePingMessageProperly(String pingQm) {
 
 		// String mockMsg = "Sat May 23 15:55:05 CEST
@@ -124,12 +161,12 @@ public class PingMsgProducer {
 		// tokens[0]: lastPingDate; tokens[1]: PingOrig (nodeName); tokens[3] pingDest;
 		// tokens[5]
 
-		LOGGER.debug(" [x] Received '" + pingQm + "'");
+		logger.debug(" [x] Received '" + pingQm + "'");
 		String delims = ";";
 		String[] tokens = pingQm.split(delims);
 
 		if (tokens.length != 6) {
-			LOGGER.error("Message from RMQ has wrong contents. ABORTING PARSE!!");
+			logger.error("Message from RMQ has wrong contents. ABORTING PARSE!!");
 			return null; // Error condition. No valid PingEntry object can be constructed.
 		} // The token number should be six, otherwise the message can't be parsed!
 		else {
@@ -139,7 +176,7 @@ public class PingMsgProducer {
 			try {
 				lastPingDate = format.parse(tokens[0]);
 			} catch (ParseException e) {
-				LOGGER.error("Error parsing DATE in message on RMQ. ABORTING Parse!");
+				logger.error("Error parsing DATE in message on RMQ. ABORTING Parse!");
 				return null; // Error condition. No valid PingEntry object can be constructed.
 			}
 
