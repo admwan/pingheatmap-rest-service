@@ -40,7 +40,7 @@
 
   
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
-			<level value="DEBUG"/>			
+			<level value="INFO"/>			
 		</logger>
 
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.VmPinger">
@@ -48,11 +48,11 @@
 		</logger>
 		
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingMsgProducer">
-			<level value="DEBUG"/>			
+			<level value="INFO"/>			
 		</logger>
 
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingEntry">
-			<level value="DEBUG"/>			
+			<level value="INFO"/>			
 		</logger>
 
     	<root>

@@ -70,10 +70,6 @@ public class PingDaemon implements Runnable {
 			logger.debug("---------- Specified node in the call to main(String node) exists - and is instantiated as: "
 					+ this.thisNode.toString());
 	}
-
-	private void sendPentriesRabbitMq() {
-		
-	}
 	
 	@Override
 	public void run() {
@@ -111,6 +107,7 @@ public class PingDaemon implements Runnable {
 				// Note that this cannot be done in PingMsgProducer, because that will cause a concurrent access Exception: 
 				// The list of PingEntries is being tried to be modified by (several) different Threads, that - of course -
 				// causes inconsistencies. 
+				logger.info("PingEntry's written to the RabbitMq: " + this.pingEntriesAllVms.toString());
 				this.pingEntriesAllVms.clear();
 			});
 
