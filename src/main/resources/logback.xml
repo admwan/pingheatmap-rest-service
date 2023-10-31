@@ -9,6 +9,16 @@
     			<level>TRACE</level>
     		</filter>
     	</appender>
+   
+   	<appender name="pingDaemonAppender" class="ch.qos.logback.core.ConsoleAppender">
+    		<encoder>
+    			<Pattern>%d{HH:mm:ss.SSS} %c{0} - %msg %n
+    			</Pattern>
+    		</encoder>
+    		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+    			<level>TRACE</level>
+    		</filter>
+    	</appender>
 
       	<appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
     		<File>c:/tmp/rest-demo.log</File>
@@ -40,7 +50,8 @@
 
   
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
-			<level value="INFO"/>			
+			<level value="INFO"/>
+			<appender-ref ref = "pingDaemonAppender"/>			
 		</logger>
 
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.VmPinger">

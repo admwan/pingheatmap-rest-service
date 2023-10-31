@@ -98,6 +98,7 @@ public class PingDaemon implements Runnable {
 			this.vMpingObjectArray.forEach((vmPingerNode, vmPingObject) -> {
 				logger.debug("List of PingEntry's for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode
 						+ ": \n" + vmPingObject.getPingEntries());
+				logger.info("PingEntry's ready to be written to the RabbitMQ: " +vmPingObject.getPingEntries());
 				this.pingEntriesAllVms.addAll(vmPingObject.getPingEntries());
 				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!!
 				//logger.debug("--------------------------------------------------------------------------------------------------------");
@@ -107,7 +108,8 @@ public class PingDaemon implements Runnable {
 				// Note that this cannot be done in PingMsgProducer, because that will cause a concurrent access Exception: 
 				// The list of PingEntries is being tried to be modified by (several) different Threads, that - of course -
 				// causes inconsistencies. 
-				logger.info("PingEntry's written to the RabbitMq: " + this.pingEntriesAllVms.toString());
+				
+				// logger.info("PingEntry's written to the RabbitMq: " + this.pingEntriesAllVms.toString());
 				this.pingEntriesAllVms.clear();
 			});
 
