@@ -124,15 +124,17 @@ public class PingMsgProducer {
 	 * <SilverCloudNode thatNode.getNodeName()>;<SilverCloudNode thatNode.getIPaddress()><;PINGRESULT.[value]>
 	 */
 	public void writePiEnToRabbitmq(SilverCloudNode thisNode, ArrayList<PingEntry> piEnLi) {
+		/* Debugging for development, remove after finishing up
 		logger.debug("********************** PingMsgProducer object for this node: " + thisNode.getNodeName() + " "
 				+ "called with Ping Entry destination list size: " + piEnLi.size());
+		*/
 		piEnLi.forEach(pingentry -> {
 			String stringFromPiE = stringifyPingEntry(pingentry);
-			/* TBD: put this in a JUnit test!!!!
+			/* TBD: put this in a JUnit test!!!! */
 			logger.debug("String to be written to RabbitMQ: " + stringFromPiE);
 			PingEntry peConvertedBackFromString = parsePingMessageProperly(stringFromPiE);
 			logger.debug("Did the round-trip conversion work? " + peConvertedBackFromString.equals(pingentry));
-			*/
+			/**/
 			this.amqpTemplate.convertAndSend("SilverSurfieRMQHpingQueue",stringFromPiE);
 			//piEnLi.remove(pingentry); Don't remove the PingEntry's here or you'll get a concurrent access Exception!
 		});

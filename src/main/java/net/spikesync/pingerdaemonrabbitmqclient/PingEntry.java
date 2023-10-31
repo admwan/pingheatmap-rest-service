@@ -156,6 +156,7 @@ public class PingEntry implements Cloneable {
 
 		if ((this.pingOrig.equals(otherSiClNoOr)) 
 				&& (this.pingDest.equals(otherSiClNoDe))
+				&& (this.pingOrig.equals(otherSiClNoOr))
 				&& ( Math.abs(this.lastPingDate.getTime() - otherLaPiDa.getTime()) < timeUncertainty) 
 				&& (this.lastPingResult.equals(otherLaRe))
 				&& (this.pingHeat.equals(otherPiHe)))
