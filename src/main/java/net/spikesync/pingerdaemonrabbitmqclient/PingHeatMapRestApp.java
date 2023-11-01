@@ -1,32 +1,24 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.support.GenericXmlApplicationContext;
-
-import net.spikesync.api.PingHeatMapController;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
-@ImportResource(locations = { "classpath:beans.xml" })
+@ImportResource(locations = {"classpath:beans.xml" })
 @SpringBootApplication
-public class PingheatMapRestService {
+public class PingHeatMapRestApp {
 
-	private static final Logger logger = LoggerFactory.getLogger(PingheatMapRestService.class);
+	private static final Logger logger = LoggerFactory.getLogger(PingHeatMapRestApp.class);
 
 	public static void main(String[] args) {
 
@@ -38,7 +30,7 @@ public class PingheatMapRestService {
 			logger.debug("************** ========= Property test-silvercloud-scnodes is set to: "
 					+ prop.getProperty("test-silvercloud-scnodes"));
 
-		SpringApplication springDevPingApp = new SpringApplication(PingheatMapRestService.class);
+		SpringApplication springDevPingApp = new SpringApplication(PingHeatMapRestApp.class);
 		springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8098"));
 		springDevPingApp.run(args);
 
