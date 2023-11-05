@@ -16,7 +16,7 @@
     			</Pattern>
     		</encoder>
     		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-    			<level>TRACE</level>
+    			<level>DEBUG</level>
     		</filter>
     	</appender>
 
@@ -50,8 +50,10 @@
 
   
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
-			<level value="INFO"/>
-			<appender-ref ref = "pingDaemonAppender"/>			
+			<level value="DEBUG"/>
+			<!-- 			 -->
+			<appender-ref ref = "pingDaemonAppender"/>		
+	
 		</logger>
 
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.VmPinger">

@@ -98,7 +98,10 @@ public class PingDaemon implements Runnable {
 			this.vMpingObjectArray.forEach((vmPingerNode, vmPingObject) -> {
 				logger.debug("List of PingEntry's for nodes: " + this.thisNode.getNodeName() + ", " + vmPingerNode
 						+ ": \n" + vmPingObject.getPingEntries());
-				logger.info("PingEntry's ready to be written to the RabbitMQ: " +vmPingObject.getPingEntries());
+
+				
+				//				logger.info("PingEntry's ready to be written to the RabbitMQ: " +vmPingObject.getPingEntries());
+				
 				this.pingEntriesAllVms.addAll(vmPingObject.getPingEntries());
 				vmPingObject.clearPingEntries(); // Don't forget to clear the list of PingEntry's after reading them!!!
 				//logger.debug("--------------------------------------------------------------------------------------------------------");
