@@ -3,11 +3,13 @@ package net.spikesync.pingerdaemonrabbitmqclient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.spikesync.api.SimplePingHeat;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
@@ -95,7 +97,6 @@ public class PingHeatMap {
 	}
 
 	public void setLastTimePingFailed(SilverCloudNode rowNode, SilverCloud colNode, Date pingFailedDate) {
-		@SuppressWarnings("unlikely-arg-type")
 		PingHeatData pingHeatData = pingHeatMap.get(rowNode).get(colNode);
 		pingHeatData.setLastPingSuccess(pingFailedDate);
 	}
@@ -145,7 +146,7 @@ public class PingHeatMap {
 		}
 	}
 
-	public String getHeatMapAsString() {
+	public String getPingHeatMapAsString() {
 		String foHeMa = "";
 		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
@@ -172,6 +173,27 @@ public class PingHeatMap {
 
 	}
 
+	public ArrayList<SimplePingHeat> getPiHeMaAsSimplePingHeatList() {
+		ArrayList<SimplePingHeat> pingHeMaPiEnLi = new ArrayList<SimplePingHeat> ();
+		
+		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
+			// int countCells = 0;
+			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
+				// ++countCells;
+				int cellPingHeat = this.getPingHeat(rowNode.getKey(),colNode.getKey()).getValue();
+				
+				pingHeMaPiEnLi.add(new SimplePingHeat(colNode.getKey().getNodeName(), 
+						rowNode.getKey().getNodeName(), cellPingHeat));
+				
+				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
+						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());
+				// + " --- cellCounter: " + countCells);
+			}
+		}
+		
+		return pingHeMaPiEnLi;
+	}
+	
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PingHeatData heat) {
 		this.pingHeatMap.get(rowNode).put(colNode, heat);
 	}

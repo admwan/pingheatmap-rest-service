@@ -26,6 +26,16 @@ public class SilverCloud {
 	
 	public ArrayList<SilverCloudNode> getScNodes() { return this.scNodes; }
 
+	public ArrayList<String> getScNodeNames() { 
+		ArrayList<String> nodeNameList = new ArrayList<String>();
+		
+		this.scNodes.forEach(silverCloudNode -> { 
+			nodeNameList.add(silverCloudNode.getNodeName());
+		});
+		
+		return nodeNameList;
+	}
+	
 	public SilverCloudNode getNodeByName(String noNa) {
 		SilverCloudNode foundNode = this.scNodes.stream()
 				.filter(node -> noNa.equals(node.getNodeName()))

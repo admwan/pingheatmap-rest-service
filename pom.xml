@@ -20,8 +20,19 @@ INCLUDED!! -->
 	<properties>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
 	</properties>
 	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api
+		** validate form fields to Beans, e.g., @NotEmpty -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -29,16 +40,7 @@ INCLUDED!! -->
 		</dependency>
 
 
-		<!-- Dependency on spring-context is not necessary if the project has
-		spring-boot-starter-parent as parent 
-		https://mvnrepository.com/artifact/org.springframework/spring-context 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>6.0.12</version>
-		</dependency> -->
-
-		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
+			<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
 		verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -62,28 +64,6 @@ INCLUDED!! -->
 			<artifactId>jackson-core</artifactId>
 		</dependency>
 
-
-		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
-	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
-
-		<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
-		works for both versions with or without the spring-boot parent! 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.20.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.20.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.20.0</version>
-		</dependency>
- -->
 
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 
 		This dependency pulls in slf4j-api!!! See:
@@ -123,9 +103,27 @@ INCLUDED!! -->
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.0</version>
 					<configuration>
-						<release>11</release>
+						<release>17</release>
 					</configuration>
 				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
+
+
+	<!-- Dependency on spring-context is not necessary if the project has
+		spring-boot-starter-parent as parent 
+		https://mvnrepository.com/artifact/org.springframework/spring-context 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.0.12</version>
+		</dependency> -->
+
+<!-- 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
@@ -136,16 +134,35 @@ INCLUDED!! -->
 							</goals>
 						</execution>
 					</executions>
-					<!-- the configuration element must be OUTSIDE the element
-					executions!! -->
+					<! - the configuration element must be OUTSIDE the element
+					executions!! - >
 					<configuration>
 						<mainClass>
 							net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
+-->
 
-			</plugins>
-		</pluginManagement>
-	</build>
+		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
+	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
-</project>
+		<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
+		works for both versions with or without the spring-boot parent! 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+ -->
+
+

@@ -30,14 +30,25 @@ public class PingEntry implements Cloneable {
 	
 	public static enum PINGHEAT {
 	
-		UNKNOWN, // Pingheat is unknown. This is the LOWEST ordinal!! Important to determine the warmer or colder temperature!
-		GLACIAL,
-		FRIGID,
-		CRISPY, 
-		TEPID,
-		SNUG,
-		TROPIC,
-		SCORCHING,
+		
+		UNKNOWN(-1), // Pingheat is unknown. This is the LOWEST ordinal!! Important to determine the warmer or colder temperature!
+		GLACIAL(0),
+		FRIGID(1),
+		CRISPY(2), 
+		TEPID(3),
+		SNUG(4),
+		TROPIC(5),
+		SCORCHING(6);
+		
+		private int heat;
+
+		PINGHEAT(int h) {
+			this.heat=h;
+		}			
+		
+		int getValue() {
+			return heat;
+		}
 	}
 	
 	static public PINGHEAT getWarmerHeat(PINGHEAT temperature) {
