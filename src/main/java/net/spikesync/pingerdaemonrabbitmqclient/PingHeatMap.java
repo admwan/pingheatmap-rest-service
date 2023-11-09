@@ -3,17 +3,14 @@ package net.spikesync.pingerdaemonrabbitmqclient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.spikesync.api.SimplePingHeat;
-import net.spikesync.pingerdaemonrabbitmqclient.PingEntry;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
-import net.spikesync.pingerdaemonrabbitmqclient.PingHeatData;
 
 public class PingHeatMap {
 
@@ -61,6 +58,14 @@ public class PingHeatMap {
 				+ this.pingHeatMap.keySet().size());
 	}
 
+	public ArrayList<String> getSilverCloudNodeNameList() {
+		ArrayList<String> silverCloudNodeNameList = new ArrayList<String>();
+		this.pingHeatMap.forEach((key, value) -> {
+			silverCloudNodeNameList.add(key.getNodeName());
+		});
+		return silverCloudNodeNameList;
+	}
+	
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatmap() {
 		logger.debug("**************************&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Now returning pingHeatMap: "
 				+ this.pingHeatMap.toString());
@@ -182,8 +187,8 @@ public class PingHeatMap {
 				// ++countCells;
 				int cellPingHeat = this.getPingHeat(rowNode.getKey(),colNode.getKey()).getValue();
 				
-				pingHeMaPiEnLi.add(new SimplePingHeat(colNode.getKey().getNodeName(), 
-						rowNode.getKey().getNodeName(), cellPingHeat));
+				pingHeMaPiEnLi.add(new SimplePingHeat(rowNode.getKey().getNodeName(), 
+						colNode.getKey().getNodeName(), cellPingHeat));
 				
 				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
 						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());

@@ -1,3 +1,3 @@
 package net.spikesync.api;
 
-public record SimplePingHeat(String orgiNode, String destNode, Integer pingHeat) {}
+public record SimplePingHeat(String pingOrig, String pingDest, Integer pingHeat) {}

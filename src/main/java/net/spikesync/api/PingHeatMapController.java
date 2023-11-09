@@ -101,14 +101,14 @@ public class PingHeatMapController {
 	
 	// The following two methods that start the update threads are *automatically* called when creating an instance
 	// of this class! How is that possible?
-//	@Autowired
+	@Autowired
 	@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
 		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapUpdateThread ...");
 		new Thread(this.pingHeMaUpThread).start();
 	}
 
-//	@Autowired
+	@Autowired
 	@PostMapping("/startcooldownpingheatmap")
 	public void startCooldownPingHeatMap() {
 		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapCooldownThread ...");
@@ -119,7 +119,7 @@ public class PingHeatMapController {
 		/* TBD ...................... */
 	}
 
-//	@Autowired
+	@Autowired
 	@PostMapping("/pingheatmap")
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatMap() {
 		logger.debug("Now returning pingHeatMap as HashMap from REST API method getPingHeatMap");
@@ -159,7 +159,7 @@ public class PingHeatMapController {
 	@GetMapping("/plainjsonpingheatmap")
 	public ResponseEntity<AjaxResponseBody> getPlainJsonPingHeatMap() {
 		AjaxResponseBody ajaxReBo = new AjaxResponseBody();
-		ajaxReBo.setPingNodeList(this.silverCloud.getScNodeNames());
+		ajaxReBo.setPingNodeList(this.pingHeatMap.getSilverCloudNodeNameList());
 		
 		logger.debug("AjaxResponsebody.getPingNodeList TO BE RETURNED BY ENDPOINT /plainjsonpingheatmap: " + 
 				ajaxReBo.getPingNodeList());
