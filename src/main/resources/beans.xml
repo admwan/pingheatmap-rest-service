@@ -21,7 +21,7 @@
 	</bean>
 	
 	<bean id="pingMsgReader" class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader">
-		<constructor-arg index="0" ref="silverCloud"/>
+		<constructor-arg index="0" ref="pingHeatMap"/>
 		<constructor-arg index="1" ref="amqpTemplate"/>
 		<constructor-arg index="2" ref="connectionFactory"/>
 		<constructor-arg index="3" ref="silverCloudQueue"/>
@@ -32,6 +32,7 @@
 		<constructor-arg index="1" ref="pingHeatMap"/>
 	</bean>
 
+ 
 	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="SURFIE" value="192.168.50.100" />
@@ -43,6 +44,17 @@
 		<entry key="ASGAFS" value="192.168.50.119" />
 	</util:map>
 
+ 
+ <!--  
+	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="java.lang.String">
+		<entry key="SURFIE" value="192.168.50.100" />
+		<entry key="CAPTUW" value="192.168.50.104" />
+		<entry key="THORFW" value="192.168.50.107" />
+		<entry key="LOKIFS" value="192.168.50.110" />
+	</util:map>
+  -->
+ 
 	<rabbit:connection-factory
 		id="connectionFactory" 
 		virtual-host="SilverSurfieRMQH"

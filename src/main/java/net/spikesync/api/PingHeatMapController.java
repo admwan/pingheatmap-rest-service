@@ -25,7 +25,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloud;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
-import com.fasterxml.jackson.databind.ObjectMapper;  
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(path = "/", produces = "application/json")
@@ -69,8 +69,10 @@ public class PingHeatMapController {
 			boolean connectionEstablished;
 			connectionEstablished = this.pingMsgReader.connectPingMQ();
 			if (connectionEstablished) {
-				ArrayList<PingEntry> newPingEnties = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
-				this.pingHeatMap.setPingHeat(newPingEnties);
+				ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
+				if ((newPingEntries != null) && !newPingEntries.isEmpty())
+					this.pingHeatMap.setPingHeat(newPingEntries);
+				else logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
 			}
 			try {
 				Thread.sleep(500);
@@ -84,22 +86,21 @@ public class PingHeatMapController {
 	}
 
 	public void cooldownPingHeatMap() {
-		while(true) {
+		while (true) {
 			pingHeatMap.coolDownPingHeat();
 			pingHeatMap.printPingHeatMap();
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				logger.error(
-						"Exception during sleep of Thread running pingHeatMap.coolDownPingHeat() !!");
+				logger.error("Exception during sleep of Thread running pingHeatMap.coolDownPingHeat() !!");
 				e.printStackTrace();
 			}
 
 		}
 	}
 
-	
-	// The following two methods that start the update threads are *automatically* called when creating an instance
+	// The following two methods that start the update threads are *automatically*
+	// called when creating an instance
 	// of this class! How is that possible?
 	@Autowired
 	@PostMapping("/startupdatepingheatmap")
@@ -114,7 +115,7 @@ public class PingHeatMapController {
 		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapCooldownThread ...");
 		new Thread(this.pingHeMaCooldownThread).start();
 	}
-	
+
 	public void stopUpdatePiHeMa() {
 		/* TBD ...................... */
 	}
@@ -135,60 +136,56 @@ public class PingHeatMapController {
 	}
 
 	@Autowired
-	@CrossOrigin(origins= {"http://localhost:8000"})
+	@CrossOrigin(origins = { "http://localhost:8000" })
 	@PostMapping("/jsonpingheatmap")
 	public String getJsonPingHeatMap() {
 		logger.debug("Now returning pingHeatMap as HashMap converted to JSON --- REST API method getPingHeatMap");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonPiHeMa = "";
 		try {
-			
+
 			jsonPiHeMa = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pingHeatMap);
-					
-		}
-		catch (IOException e){
+
+		} catch (IOException e) {
 			e.printStackTrace();
-			logger.debug("pinHeatMap can NOT be converted into JSON!!!! Returning a stringified pingHeatMap instead!!!!!!!");
+			logger.debug(
+					"pinHeatMap can NOT be converted into JSON!!!! Returning a stringified pingHeatMap instead!!!!!!!");
 			return getStringifiedHeatMap();
 		}
 		return jsonPiHeMa;
 	}
 
 	@Autowired
-	@CrossOrigin(origins= {"http://localhost:8000"})
+	@CrossOrigin(origins = { "http://localhost:8000" })
 	@GetMapping("/plainjsonpingheatmap")
 	public ResponseEntity<AjaxResponseBody> getPlainJsonPingHeatMap() {
 		AjaxResponseBody ajaxReBo = new AjaxResponseBody();
 		ajaxReBo.setPingNodeList(this.pingHeatMap.getSilverCloudNodeNameList());
-		
-		logger.debug("AjaxResponsebody.getPingNodeList TO BE RETURNED BY ENDPOINT /plainjsonpingheatmap: " + 
-				ajaxReBo.getPingNodeList());
+
+		logger.debug("AjaxResponsebody.getPingNodeList TO BE RETURNED BY ENDPOINT /plainjsonpingheatmap: "
+				+ ajaxReBo.getPingNodeList());
 		ArrayList<SimplePingHeat> simplePingHeatList = this.pingHeatMap.getPiHeMaAsSimplePingHeatList();
 		ajaxReBo.setPingMatrixData(simplePingHeatList);
-	
-		return ResponseEntity.ok(ajaxReBo);
-		
-	}
-		/* Crude mapping of the whole pingHeatMap onto JSON won't work !!! This has been replaced by the 
-		 * AjaxResponseBody type as parameter of ResponseEntity above.
-		 
-		logger.debug("Returning !! ResponseEntity<String> !! with JSON as the body, and OK as the status !! \n"
-				+ "--------------------------------------------------- REST API method getPingHeatMap");
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonPiHeMa = "";
-		try {
-			
-			jsonPiHeMa = mapper.writeValueAsString(pingHeatMap);
-					
-		}
-		catch (IOException e){
-			e.printStackTrace();
-			logger.debug("pinHeatMap can NOT be converted into JSON!!!! Returning null!!!!!!!");
-			return null;
-		}
-		*/
-		
 
+		return ResponseEntity.ok(ajaxReBo);
+
+	}
+	/*
+	 * Crude mapping of the whole pingHeatMap onto JSON won't work !!! This has been
+	 * replaced by the AjaxResponseBody type as parameter of ResponseEntity above.
+	 * 
+	 * logger.
+	 * debug("Returning !! ResponseEntity<String> !! with JSON as the body, and OK as the status !! \n"
+	 * +
+	 * "--------------------------------------------------- REST API method getPingHeatMap"
+	 * ); ObjectMapper mapper = new ObjectMapper(); String jsonPiHeMa = ""; try {
+	 * 
+	 * jsonPiHeMa = mapper.writeValueAsString(pingHeatMap);
+	 * 
+	 * } catch (IOException e){ e.printStackTrace(); logger.
+	 * debug("pinHeatMap can NOT be converted into JSON!!!! Returning null!!!!!!!");
+	 * return null; }
+	 */
 
 	@Autowired
 	@PostMapping("/lastcaptpingdate")
@@ -203,35 +200,37 @@ public class PingHeatMapController {
 	}
 
 	/*
-	 * This endpoint returns a ResponseEntity, see: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responseentity.html
-	 * It has the fields String body and String etag. For the time being this serves as a substitute response from the 
-	 * previous silvercloud-pingermatrix-spring-ajax-integrated project in attempt to reuse the JS/jQuery code of that
-	 * template.
+	 * This endpoint returns a ResponseEntity, see:
+	 * https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/
+	 * ann-methods/responseentity.html It has the fields String body and String
+	 * etag. For the time being this serves as a substitute response from the
+	 * previous silvercloud-pingermatrix-spring-ajax-integrated project in attempt
+	 * to reuse the JS/jQuery code of that template.
 	 * 
 	 */
-	@PostMapping(value="/show-pinger-matrix", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AjaxResponseBody> getSearchResultViaAjax(
-			@RequestBody DataInPostRequest dataInPostRequest, 
+	@PostMapping(value = "/show-pinger-matrix", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AjaxResponseBody> getSearchResultViaAjax(@RequestBody DataInPostRequest dataInPostRequest,
 			Errors errors) {
 
-		logger.debug("Now in PostMapping method getSearchResultsViaAjax() with dataInPostRequest.getPostRequestDataVal1: " + dataInPostRequest.getPostRequestDataVal1());
+		logger.debug(
+				"Now in PostMapping method getSearchResultsViaAjax() with dataInPostRequest.getPostRequestDataVal1: "
+						+ dataInPostRequest.getPostRequestDataVal1());
 		AjaxResponseBody result = new AjaxResponseBody();
 
-		//If error, just return a 400 bad request, along with the error message
+		// If error, just return a 400 bad request, along with the error message
 		if (errors.hasErrors()) {
 
-			result.setMsg(errors.getAllErrors()
-					.stream().map(x -> x.getDefaultMessage())
-					.collect(Collectors.joining(",")));
+			result.setMsg(
+					errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.joining(",")));
 			return ResponseEntity.badRequest().body(result);
 
 		}
 		// No errors, return the values requested from the PinHeatMap!!! TBD!!!!
-			result.setMsg("No data returned from PingerMatrixUpdateService!!");
-		//	result.setMsg("Success!!");
+		result.setMsg("No data returned from PingerMatrixUpdateService!!");
+		// result.setMsg("Success!!");
 
-		//result.setPingNodeList(pingMatrix.getPingNodes());
-		//result.setPingMatrixData(pingMatrix.getPingHeatData());
+		// result.setPingNodeList(pingMatrix.getPingNodes());
+		// result.setPingMatrixData(pingMatrix.getPingHeatData());
 
 		return ResponseEntity.ok(result);
 

@@ -3,7 +3,11 @@ package net.spikesync.pingerdaemonrabbitmqclient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,22 +186,37 @@ public class PingHeatMap {
 		ArrayList<SimplePingHeat> pingHeMaPiEnLi = new ArrayList<SimplePingHeat> ();
 		
 		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {
-			// int countCells = 0;
+			
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
-				// ++countCells;
+			
 				int cellPingHeat = this.getPingHeat(rowNode.getKey(),colNode.getKey()).getValue();
 				
 				pingHeMaPiEnLi.add(new SimplePingHeat(rowNode.getKey().getNodeName(), 
-						colNode.getKey().getNodeName(), cellPingHeat));
-				
-				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
-						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());
-				// + " --- cellCounter: " + countCells);
+						colNode.getKey().getNodeName(), cellPingHeat));				
 			}
-		}
-		
+		}	
 		return pingHeMaPiEnLi;
 	}
+	
+	
+	public Set<String> getPiHeMaAsNodeNameList() {
+		ArrayList<String> pingHeMaNoNaLi = new ArrayList<String>();
+		
+		//For future use: get a list of unique row node entries of type SilverCloudNode.
+		Set<Map.Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>>> rowEntrySet = 
+				new HashSet<Map.Entry<SilverCloudNode,HashMap<SilverCloudNode,PingHeatData>>>();
+		for (Entry<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> rowNode : pingHeatMap.entrySet()) {		
+			
+			//For future use.
+			rowEntrySet.add(rowNode);
+			
+			//Collect the row node names into a list with duplicates. The duplicates are the number of the number of columns.
+			pingHeMaNoNaLi.add(rowNode.getKey().getNodeName());			
+			}
+		//Return only the set of unique node names, presumably in the correct order.. TBD: check if this is true!
+		return new LinkedHashSet<>(pingHeMaNoNaLi);
+	}
+	
 	
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PingHeatData heat) {
 		this.pingHeatMap.get(rowNode).put(colNode, heat);
