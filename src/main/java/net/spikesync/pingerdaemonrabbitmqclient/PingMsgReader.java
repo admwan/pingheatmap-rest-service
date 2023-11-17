@@ -153,23 +153,11 @@ public class PingMsgReader {
 			}
 
 			Set<String> silverCloudNodes = this.pingHeatMap.getPiHeMaAsNodeNameList();
-			logger.debug("!!!!$$$$^^^^ List of SilverCloudNodes in parsePingMessageProperly(): "
-					+ silverCloudNodes.toString());
-
-			if(tokens[3].equals("HYDRFS")) {
-				logger.debug("!!!!####^^^^ Nodename: " + tokens[3] + " should NOT appear in the node name list: " + 
-						silverCloudNodes.toString());
-
-			}
 			
-			if(!silverCloudNodes.contains(tokens[1])) {
-				logger.debug("!!!!####^^^^ Nodename: " + tokens[1] + " NOT found in SilverCloud ORIGINATOR Node list!!");
+			if( (!silverCloudNodes.contains(tokens[1])) || (!silverCloudNodes.contains(tokens[3])) ) {
+				logger.debug("Nodename: " + tokens[1] + "OR" + tokens[3] + " NOT FOUND in SilverCloud Node list!!");
 				return null;
-			}
-			else if (!silverCloudNodes.contains(tokens[3])) {
-				logger.debug("!!!!####^^^^ Nodename: " + tokens[3] + " NOT found in SilverCloud DESTINATION Node list!!");
-				return null;
-			}
+			}		
 			 else {
 				SilverCloudNode origNode = new SilverCloudNode(tokens[1], tokens[2]);
 				SilverCloudNode destNode = new SilverCloudNode(tokens[3], tokens[4]);
