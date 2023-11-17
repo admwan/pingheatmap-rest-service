@@ -111,9 +111,10 @@ public class PingMsgReader {
 				 * there is something wrong with the message, e.g., the node in the message
 				 * doesn't exists, it is not added to the list.
 				 */
-				if (newPingEntry != null)
+				if (newPingEntry != null) {
 					pingEntriesFromRmq.add(newPingEntry);
-				logger.debug("Parsed Message: " + newPingEntry.toString());
+					logger.debug("Parsed Message: " + newPingEntry.toString());
+				}
 			} else
 				logger.debug(
 						"Message retrieved in PingMsgReader.updatePingHeatMap() is empty. NOT UPDATING pingHeatMap!");
@@ -155,11 +156,21 @@ public class PingMsgReader {
 			logger.debug("!!!!$$$$^^^^ List of SilverCloudNodes in parsePingMessageProperly(): "
 					+ silverCloudNodes.toString());
 
-			if (!silverCloudNodes.contains(tokens[1]) || !silverCloudNodes.contains(tokens[3])) {
-				logger.debug("!!!!####^^^^ Nodename: " + tokens[1] + ", or: " + tokens[3] + 
-						"NOT FOUND in SilverCloud node name list!!");
+			if(tokens[3].equals("HYDRFS")) {
+				logger.debug("!!!!####^^^^ Nodename: " + tokens[3] + " should NOT appear in the node name list: " + 
+						silverCloudNodes.toString());
+
+			}
+			
+			if(!silverCloudNodes.contains(tokens[1])) {
+				logger.debug("!!!!####^^^^ Nodename: " + tokens[1] + " NOT found in SilverCloud ORIGINATOR Node list!!");
 				return null;
-			} else {
+			}
+			else if (!silverCloudNodes.contains(tokens[3])) {
+				logger.debug("!!!!####^^^^ Nodename: " + tokens[3] + " NOT found in SilverCloud DESTINATION Node list!!");
+				return null;
+			}
+			 else {
 				SilverCloudNode origNode = new SilverCloudNode(tokens[1], tokens[2]);
 				SilverCloudNode destNode = new SilverCloudNode(tokens[3], tokens[4]);
 				PingEntry.PINGRESULT pingEnumResult;

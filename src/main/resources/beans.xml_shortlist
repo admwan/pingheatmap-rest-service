@@ -51,7 +51,6 @@
 		<entry key="CAPTUW" value="192.168.50.104" />
 		<entry key="THORFW" value="192.168.50.107" />
 		<entry key="LOKIFS" value="192.168.50.110" />
-		<entry key="ASGAFS" value="192.168.50.119" />		
 	</util:map>
  
  
