@@ -105,7 +105,7 @@ public class PingHeatMap {
 		pingHeatData.setLastPingSuccess(pingSuccessDate);
 	}
 
-	public void setLastTimePingFailed(SilverCloudNode rowNode, SilverCloud colNode, Date pingFailedDate) {
+	public void setLastTimePingFailed(SilverCloudNode rowNode, SilverCloudNode colNode, Date pingFailedDate) {
 		PingHeatData pingHeatData = pingHeatMap.get(rowNode).get(colNode);
 		pingHeatData.setLastPingSuccess(pingFailedDate);
 	}
@@ -161,11 +161,9 @@ public class PingHeatMap {
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
 				foHeMa += "(" + rowNode.getKey().getNodeName() + ", " + colNode.getKey().getNodeName()
 						+ "): [pingHeat: " + colNode.getValue().getPingHeat() + "]\n";
-
 			}
 		}
-
-		return foHeMa;
+	return foHeMa;
 	}
 
 	public void printPingHeatMap() {
@@ -179,7 +177,6 @@ public class PingHeatMap {
 			}
 		}
 		logger.debug(" --------------------------------------------------------------------------------------------- ");
-
 	}
 
 	public ArrayList<SimplePingHeat> getPiHeMaAsSimplePingHeatList() {
@@ -198,7 +195,10 @@ public class PingHeatMap {
 		return pingHeMaPiEnLi;
 	}
 	
-	
+	/*
+	 * Method  getPiHeMaAsNodeNameList() returns the SilverCloud node names in the order as they appear in the 
+	 * PingHeatMatrix.
+	 */
 	public Set<String> getPiHeMaAsNodeNameList() {
 		ArrayList<String> pingHeMaNoNaLi = new ArrayList<String>();
 		
@@ -213,11 +213,17 @@ public class PingHeatMap {
 			//Collect the row node names into a list with duplicates. The duplicates are the number of the number of columns.
 			pingHeMaNoNaLi.add(rowNode.getKey().getNodeName());			
 			}
-		//Return only the set of unique node names, presumably in the correct order.. TBD: check if this is true!
+		/* Return only the set of unique node names in the order they were added into the Set. 
+		 * ChatGPT confirms:
+		 * The one-argument constructor of LinkedHashSet that takes a Set as an argument maintains the order of elements 
+		 * while ensuring uniqueness by filtering out duplicates. When you create a new LinkedHashSet by passing another 
+		 * Set as an argument, the iteration order of the elements in the resulting LinkedHashSet is determined by the 
+		 * iteration order of the elements in the provided Set.
+		 * THIS IS NOT EXPLICITLY MENTIONED IN THE API DOC!
+		 */
 		return new LinkedHashSet<>(pingHeMaNoNaLi);
 	}
-	
-	
+
 	public void setPingHeat(SilverCloudNode rowNode, SilverCloudNode colNode, PingHeatData heat) {
 		this.pingHeatMap.get(rowNode).put(colNode, heat);
 	}
