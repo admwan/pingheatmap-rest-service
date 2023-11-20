@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -38,20 +37,20 @@ public class PingHeatMapController {
 	private final SilverCloud silverCloud;
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
-	private Runnable pingHeMaUpThread;
-	private Runnable pingHeMaCooldownThread;
+	private Runnable pingHeMaUpRunnable;
+	private Runnable pingHeMaCooldownRunnable;
 
 	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, SilverCloud siCl) {
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
 		silverCloud = siCl;
-		pingHeMaUpThread = new Runnable() {
+		pingHeMaUpRunnable = new Runnable() {
 			@Override
 			public void run() {
 				readRmqUpdatePiHeMa();
 			}
 		};
-		pingHeMaCooldownThread = new Runnable() {
+		pingHeMaCooldownRunnable = new Runnable() {
 			@Override
 			public void run() {
 				cooldownPingHeatMap();
@@ -100,20 +99,20 @@ public class PingHeatMapController {
 	}
 
 	// The following two methods that start the update threads are *automatically*
-	// called when creating an instance
-	// of this class! How is that possible?
+	// called when creating an instance of this class! This only happens when annotated with @Autowired! TBD: HOW??
 	@Autowired
 	@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
 		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapUpdateThread ...");
-		new Thread(this.pingHeMaUpThread).start();
+		new Thread(this.pingHeMaUpRunnable).start();
 	}
-
+	
+	// Idem as the previous method: automatically executed on startup when @Autowired is present!
 	@Autowired
 	@PostMapping("/startcooldownpingheatmap")
 	public void startCooldownPingHeatMap() {
 		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapCooldownThread ...");
-		new Thread(this.pingHeMaCooldownThread).start();
+		new Thread(this.pingHeMaCooldownRunnable).start();
 	}
 
 	public void stopUpdatePiHeMa() {

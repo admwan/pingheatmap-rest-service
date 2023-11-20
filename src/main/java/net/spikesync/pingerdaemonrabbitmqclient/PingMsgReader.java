@@ -34,10 +34,10 @@ public class PingMsgReader {
 	Channel channel = null;
 	Queue rabbitMQ = null;
 
+	// PingHeatMap MOET IK TOEVOEGEN ALS BEAN VOOR PingMsgReader! Hier stond eerst SilverCloud, maar daar heb ik geen 
+	// methods van nodig, en de nodes staan mogelijk ook niet in de volgorde waarin ze in de heatmap staan.
 	private PingHeatMap pingHeatMap;
 	private AmqpTemplate amqpTemplate;
-	// PingHeatMap MOET IK TOEVOEGEN ALS BEAN VOOR PingMsgReader!
-	// private PingHeatMap pingHeatMap;
 
 	// This constructor is NEW compared to the one in
 	// silvercloud-pingermatrix-spring-ajax-integrated!!
@@ -122,6 +122,11 @@ public class PingMsgReader {
 		return pingEntriesFromRmq;
 	}
 
+	/*
+	 * Method parsePingMessageProperly dissects the message read from the RMQ. It checks several boundary conditions, e.g.,
+	 * the number of tokens that are separated with a semicolon (;). On every occasion the message is uncompliant to 
+	 * the required format or, the method returns null, indicating a non-valid or empty message.
+	 */
 	private PingEntry parsePingMessageProperly(String pingQm) {
 
 		// String mockMsg = "Sat May 23 15:55:05 CEST
@@ -154,6 +159,10 @@ public class PingMsgReader {
 
 			Set<String> silverCloudNodes = this.pingHeatMap.getPiHeMaAsNodeNameList();
 			
+			/*
+			 * Both the origin and the destination nodes must be in the known node list. If not so, return null
+			 * which prevents a PingEntry to be created.
+			 */
 			if( (!silverCloudNodes.contains(tokens[1])) || (!silverCloudNodes.contains(tokens[3])) ) {
 				logger.debug("Nodename: " + tokens[1] + "OR" + tokens[3] + " NOT FOUND in SilverCloud Node list!!");
 				return null;
