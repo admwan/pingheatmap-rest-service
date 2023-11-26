@@ -34,16 +34,14 @@ public class PingHeatMapController {
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapController.class);
 
 	@Autowired
-	private final SilverCloud silverCloud;
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
 	private Runnable pingHeMaUpRunnable;
 	private Runnable pingHeMaCooldownRunnable;
 
-	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, SilverCloud siCl) {
+	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa) { 
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
-		silverCloud = siCl;
 		pingHeMaUpRunnable = new Runnable() {
 			@Override
 			public void run() {
