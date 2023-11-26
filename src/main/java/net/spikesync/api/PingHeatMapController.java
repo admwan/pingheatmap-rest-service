@@ -38,6 +38,7 @@ public class PingHeatMapController {
 	private final PingMsgReader pingMsgReader;
 	private Runnable pingHeMaUpRunnable;
 	private Runnable pingHeMaCooldownRunnable;
+	private Thread pingHeMaCoWorkerThread;
 
 	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa) { 
 		pingMsgReader = piMeRe;
@@ -48,6 +49,9 @@ public class PingHeatMapController {
 				readRmqUpdatePiHeMa();
 			}
 		};
+		
+		pingHeMaCoWorkerThread = new Thread(this.pingHeMaCooldownRunnable);
+		
 		pingHeMaCooldownRunnable = new Runnable() {
 			@Override
 			public void run() {
@@ -101,7 +105,7 @@ public class PingHeatMapController {
 	@Autowired
 	@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
-		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapUpdateThread ...");
+		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
 		new Thread(this.pingHeMaUpRunnable).start();
 	}
 	
@@ -109,8 +113,9 @@ public class PingHeatMapController {
 	@Autowired
 	@PostMapping("/startcooldownpingheatmap")
 	public void startCooldownPingHeatMap() {
-		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Starting pingHeatMapCooldownThread ...");
+		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
 		new Thread(this.pingHeMaCooldownRunnable).start();
+		//this.pingHeMaCoWorkerThread.start();
 	}
 
 	public void stopUpdatePiHeMa() {

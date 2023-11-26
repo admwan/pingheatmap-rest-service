@@ -27,6 +27,12 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
 
 public class PingMsgReader {
 
+	/* 
+	 * Create an error situation in parsePingMessageProperly() to test proper application shutdown after an NPE.
+	 */
+	int countNoPaPiMePrCalls = 0;
+	static int npeAfter = 100;
+	
 	private static final Logger logger = LoggerFactory.getLogger(PingMsgReader.class);
 
 	CachingConnectionFactory factory;
@@ -138,10 +144,19 @@ public class PingMsgReader {
 		// tokens[4]: pingDest (ipAddress);
 		// tokens[5]: pingHeat;
 
+		
+		 /* If an NPE is thrown in this method, it will exit the thread but not the application, which will malfunction 
+		 *  from then on. Force an NPE after a certain number (npeApter) of calls of this method.
+		 */	
+		//if(countNoPaPiMePrCalls++ > npeAfter) throw new NullPointerException();
+
+		
 		logger.debug(" [x] Received '" + pingQm + "'");
 		String delims = ";";
 		String[] tokens = pingQm.split(delims);
-
+		
+		
+		
 		if (tokens.length != 6) {
 			logger.error("Message from RMQ has wrong item number. ABORTING PARSE!!");
 			return null; // Error condition. No valid PingEntry object can be constructed.
@@ -161,7 +176,7 @@ public class PingMsgReader {
 			
 			/*
 			 * Both the origin and the destination nodes must be in the known node list. If not so, return null
-			 * which prevents a PingEntry to be created.
+			 * which prevents a PingEntry to be created. 
 			 */
 			if( (!silverCloudNodes.contains(tokens[1])) || (!silverCloudNodes.contains(tokens[3])) ) {
 				logger.debug("Nodename: " + tokens[1] + "OR" + tokens[3] + " NOT FOUND in SilverCloud Node list!!");
