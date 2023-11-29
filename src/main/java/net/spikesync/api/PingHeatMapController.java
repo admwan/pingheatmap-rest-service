@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -40,7 +41,7 @@ public class PingHeatMapController {
 	private Runnable pingHeMaCooldownRunnable;
 	private Thread pingHeMaCoWorkerThread;
 
-	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa) { 
+	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa) {
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
 		pingHeMaUpRunnable = new Runnable() {
@@ -49,9 +50,7 @@ public class PingHeatMapController {
 				readRmqUpdatePiHeMa();
 			}
 		};
-		
-		pingHeMaCoWorkerThread = new Thread(this.pingHeMaCooldownRunnable);
-		
+
 		pingHeMaCooldownRunnable = new Runnable() {
 			@Override
 			public void run() {
@@ -73,7 +72,8 @@ public class PingHeatMapController {
 				ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
 				if ((newPingEntries != null) && !newPingEntries.isEmpty())
 					this.pingHeatMap.setPingHeat(newPingEntries);
-				else logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
+				else
+					logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
 			}
 			try {
 				Thread.sleep(500);
@@ -93,33 +93,52 @@ public class PingHeatMapController {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				logger.error("Exception during sleep of Thread running pingHeatMap.coolDownPingHeat() !!");
-				e.printStackTrace();
+				logger.debug(
+						"Caught an InterruptedException. This is not an error condition, but caused by the method ...");
 			}
 
 		}
 	}
 
 	// The following two methods that start the update threads are *automatically*
-	// called when creating an instance of this class! This only happens when annotated with @Autowired! TBD: HOW??
+	// called when creating an instance of this class! This only happens when
+	// annotated with @Autowired! TBD: HOW??
 	@Autowired
 	@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
-		logger.debug("^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
+		logger.debug(
+				"^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
 		new Thread(this.pingHeMaUpRunnable).start();
 	}
-	
-	// Idem as the previous method: automatically executed on startup when @Autowired is present!
-	@Autowired
+
+	// Idem as the previous method: automatically executed on startup when
+	// @Autowired is present!
+	// @Autowired
 	@PostMapping("/startcooldownpingheatmap")
-	public void startCooldownPingHeatMap() {
-		logger.debug("^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
-		new Thread(this.pingHeMaCooldownRunnable).start();
-		//this.pingHeMaCoWorkerThread.start();
+	public ResponseEntity<String> startCooldownPingHeatMap() {
+		logger.debug(
+				"^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
+		try {
+			this.pingHeMaCoWorkerThread = new Thread(this.pingHeMaCooldownRunnable);
+			this.pingHeMaCoWorkerThread.start();
+			return ResponseEntity.ok("Success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
+		}
 	}
 
-	public void stopUpdatePiHeMa() {
-		/* TBD ...................... */
+	@PostMapping("/stopcooldownpingheatmap")
+	public ResponseEntity<String> stopUpdatePiHeMa() {
+		try {
+			if (this.pingHeMaCoWorkerThread != null && this.pingHeMaCoWorkerThread.isAlive()) {
+				this.pingHeMaCoWorkerThread.interrupt();
+			}
+			logger.debug("After interrupting this.pingHeMaCoWorkerThread. When is the exception thrown?");
+			return ResponseEntity.ok("Success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
+		}
+
 	}
 
 	@Autowired

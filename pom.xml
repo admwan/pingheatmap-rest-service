@@ -26,6 +26,14 @@ INCLUDED!! -->
 	</properties>
 	<dependencies>
 
+		<!-- Include devtools for hot deployment -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api
 		** validate form fields to Beans, e.g., @NotEmpty -->
 		<dependency>
@@ -40,7 +48,7 @@ INCLUDED!! -->
 		</dependency>
 
 
-			<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
+		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
 		verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -114,7 +122,7 @@ INCLUDED!! -->
 </project>
 
 
-	<!-- Dependency on spring-context is not necessary if the project has
+<!-- Dependency on spring-context is not necessary if the project has
 		spring-boot-starter-parent as parent 
 		https://mvnrepository.com/artifact/org.springframework/spring-context 
 		<dependency>
@@ -138,15 +146,15 @@ INCLUDED!! -->
 					executions!! - >
 					<configuration>
 						<mainClass>
-							net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
+net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
 					</configuration>
 				</plugin>
 -->
 
-		<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
+<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
 	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
-		<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
+<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
 		works for both versions with or without the spring-boot parent! 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

@@ -31,7 +31,7 @@ public class PingHeatMapRestApp {
 					+ prop.getProperty("test-silvercloud-scnodes"));
 
 		SpringApplication springDevPingApp = new SpringApplication(PingHeatMapRestApp.class);
-		springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8098"));
+		springDevPingApp.setDefaultProperties(Collections.singletonMap("server.port", "8099"));
 		springDevPingApp.run(args);
 
 	}
