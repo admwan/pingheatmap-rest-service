@@ -104,7 +104,7 @@ public class PingHeatMapController {
 	// called when creating an instance of this class! This only happens when
 	// annotated with @Autowired! TBD: HOW??
 	@Autowired
-	@PostMapping("/startupdatepingheatmap")
+	//@PostMapping("/startupdatepingheatmap")
 	public void startUpdatePiHeMa() {
 		logger.debug(
 				"^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
@@ -113,8 +113,8 @@ public class PingHeatMapController {
 
 	// Idem as the previous method: automatically executed on startup when
 	// @Autowired is present!
-	// @Autowired
-	@PostMapping("/startcooldownpingheatmap")
+	 @Autowired
+	//@PostMapping("/startcooldownpingheatmap")
 	public ResponseEntity<String> startCooldownPingHeatMap() {
 		logger.debug(
 				"^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
@@ -126,7 +126,7 @@ public class PingHeatMapController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
 		}
 	}
-
+/*
 	@PostMapping("/stopcooldownpingheatmap")
 	public ResponseEntity<String> stopUpdatePiHeMa() {
 		try {
@@ -140,7 +140,7 @@ public class PingHeatMapController {
 		}
 
 	}
-
+*/
 	@Autowired
 	@PostMapping("/pingheatmap")
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatMap() {
