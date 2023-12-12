@@ -11,7 +11,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
 public class SilverCloud {
 
-    private static final Logger logger = LoggerFactory.getLogger(PingHeatMapRestApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(SilverCloud.class);
 
 	private ArrayList<SilverCloudNode> scNodes;
 

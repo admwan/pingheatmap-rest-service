@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(path = "/", produces = "application/json")
-@CrossOrigin(origins = "http://localhost:8098")
+@CrossOrigin(origins = "http://localhost:8000")
 public class PingHeatMapController {
 
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapController.class);
