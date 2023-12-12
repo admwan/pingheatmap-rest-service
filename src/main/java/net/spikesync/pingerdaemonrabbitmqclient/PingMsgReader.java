@@ -1,6 +1,7 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,11 +71,16 @@ public class PingMsgReader {
 							"Could not instantiate AmqpTemplate in connectPingMQ!! WILL NOT BE ABLE TO READ MESSAGES FROM THE QUEUE!!");
 				}
 
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			} catch (ConnectException coe) {
+				coe.printStackTrace();
+				logger.error("Connection refused by RabbitMQ!");
+				return false;
+			} catch (IOException ioe) {
 				logger.error("Failed to connect to RabbitMQ!! Is the RabbitMQ running?");
 				return false;
+				
 			}
+			
 			return true; // this.connection was false, i.e., there was no connection yet, but now there
 							// is.
 		} else
