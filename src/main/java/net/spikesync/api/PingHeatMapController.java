@@ -1,6 +1,7 @@
 package net.spikesync.api;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,9 +66,15 @@ public class PingHeatMapController {
 
 		// In this project everything needed by PingMsgReader is injected at
 		// bean-construction time, so it is ready to be used!
+		boolean connectionEstablished = false;
+
 		while (true) {
-			boolean connectionEstablished;
-			connectionEstablished = this.pingMsgReader.connectPingMQ();
+			try {
+				connectionEstablished = this.pingMsgReader.connectPingMQ();
+
+			} catch(Exception ce) {
+				logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
+			}
 			if (connectionEstablished) {
 				ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
 				if ((newPingEntries != null) && !newPingEntries.isEmpty())
