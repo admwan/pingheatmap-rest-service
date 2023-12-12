@@ -135,10 +135,11 @@ public class PingHeatMapController {
 	}
 
 	@PostMapping("/stopcooldownpingheatmap")
-	public ResponseEntity<String> stopUpdatePiHeMa() {
+	public ResponseEntity<String> stopCooldownPiHeMa() {
 		try {
 			if (this.pingHeMaCoWorkerThread != null && this.pingHeMaCoWorkerThread.isAlive()) {
 				this.pingHeMaCoWorkerThread.interrupt();
+				this.pingHeMaCoWorkerThread.stop();
 			}
 			logger.debug("After interrupting this.pingHeMaCoWorkerThread. When is the exception thrown?");
 			return ResponseEntity.ok("Success");
