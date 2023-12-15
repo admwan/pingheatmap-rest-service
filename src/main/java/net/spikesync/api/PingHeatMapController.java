@@ -25,6 +25,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloud;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
+import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,24 +39,18 @@ public class PingHeatMapController {
 	@Autowired
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
+	private PingHeatMapCoolDownTask piHeMaCoolDownTask;
 	private Runnable pingHeMaUpRunnable;
-	private Runnable pingHeMaCooldownRunnable;
 	private Thread pingHeMaCoWorkerThread;
 
-	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa) {
+	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa)  {
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
+		piHeMaCoolDownTask = piHeMaCoDoTa;
 		pingHeMaUpRunnable = new Runnable() {
 			@Override
 			public void run() {
 				readRmqUpdatePiHeMa();
-			}
-		};
-
-		pingHeMaCooldownRunnable = new Runnable() {
-			@Override
-			public void run() {
-				cooldownPingHeatMap();
 			}
 		};
 	}
@@ -72,7 +67,7 @@ public class PingHeatMapController {
 			try {
 				connectionEstablished = this.pingMsgReader.connectPingMQ();
 
-			} catch(Exception ce) {
+			} catch (Exception ce) {
 				logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
 			}
 			if (connectionEstablished) {
@@ -126,8 +121,7 @@ public class PingHeatMapController {
 		logger.debug(
 				"^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
 		try {
-			this.pingHeMaCoWorkerThread = new Thread(this.pingHeMaCooldownRunnable);
-			this.pingHeMaCoWorkerThread.start();
+				this.piHeMaCoolDownTask.start();
 			return ResponseEntity.ok("Success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
@@ -137,14 +131,18 @@ public class PingHeatMapController {
 	@PostMapping("/stopcooldownpingheatmap")
 	public ResponseEntity<String> stopCooldownPiHeMa() {
 		try {
-			if (this.pingHeMaCoWorkerThread != null && this.pingHeMaCoWorkerThread.isAlive()) {
-				this.pingHeMaCoWorkerThread.interrupt();
-				this.pingHeMaCoWorkerThread.stop();
+			if((this.piHeMaCoolDownTask.getState()!=Thread.State.NEW) && 
+					(this.piHeMaCoolDownTask.getIsSuspended())) {
+				this.piHeMaCoolDownTask.suspendThread();
+				logger.debug("************&&&&&&&&&&& coolDwonTask Thread SUSPENDED!!");
+			}
+			else {
+				return ResponseEntity.ok("Pingheat cooldown process already started! No operation performed.");
 			}
 			logger.debug("After interrupting this.pingHeMaCoWorkerThread. When is the exception thrown?");
 			return ResponseEntity.ok("Success");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred" + e.getMessage());
 		}
 
 	}
@@ -270,3 +268,5 @@ public class PingHeatMapController {
 	}
 
 }
+
+

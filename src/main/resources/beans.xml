@@ -20,6 +20,10 @@
 		<constructor-arg ref="silverCloud"/>
 	</bean>
 	
+	<bean id="piHeMaCoolDownTaks" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask">
+		<constructor-arg ref="pingHeatMap"/>
+	</bean>
+	
 	<bean id="pingMsgReader" class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader">
 		<constructor-arg index="0" ref="pingHeatMap"/>
 		<constructor-arg index="1" ref="amqpTemplate"/>
