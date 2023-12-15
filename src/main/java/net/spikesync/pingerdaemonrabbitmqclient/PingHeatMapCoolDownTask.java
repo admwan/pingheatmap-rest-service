@@ -41,6 +41,8 @@ public class PingHeatMapCoolDownTask extends Thread {
 					}
 				}
 				pingHeatMap.coolDownPingHeat();
+				pingHeatMap.printPingHeatMap();
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
