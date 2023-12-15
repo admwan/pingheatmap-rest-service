@@ -127,7 +127,7 @@ public class PingHeatMap {
 				Date lastSuccuessFulPingDate = getLastTimeSuccesfulPing(rowNode.getKey(), colNode.getKey());
 				if (lastSuccuessFulPingDate != null) {
 
-					if (((currentMillis - lastSuccuessFulPingDate.getTime()) % 6000 >= 5000)) {
+					if (((currentMillis - lastSuccuessFulPingDate.getTime()) % 10000 >= 9000)) {
 						PingHeatData pingHeatData = colNode.getValue();
 						PINGHEAT currentPingHeat = colNode.getValue().getPingHeat();
 						pingHeatData.setPingHeat(PingEntry.getColderHeat(currentPingHeat));

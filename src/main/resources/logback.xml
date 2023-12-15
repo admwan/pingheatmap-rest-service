@@ -46,8 +46,10 @@
     	</logger>
 
 		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap">
-			<level value="DEBUG"/>
-			
+			<level value="DEBUG"/>			
+		</logger>
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask">
+			<level value="DEBUG"/>			
 		</logger>
 
     	<root>
