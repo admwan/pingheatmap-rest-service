@@ -43,7 +43,7 @@ public class PingHeatMapController {
 	private Runnable pingHeMaUpRunnable;
 	private Thread pingHeMaCoWorkerThread;
 
-	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa)  {
+	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa) {
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
 		piHeMaCoolDownTask = piHeMaCoDoTa;
@@ -121,28 +121,42 @@ public class PingHeatMapController {
 		logger.debug(
 				"^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
 		try {
+			if (this.piHeMaCoolDownTask.getState() == Thread.State.NEW) {
+	
 				this.piHeMaCoolDownTask.start();
-			return ResponseEntity.ok("Success");
+				return ResponseEntity.ok("Succesfully STARTED ping heatmap cooldown process!\n");
+			}
+			else if (this.piHeMaCoolDownTask.getIsSuspended()) {
+				this.piHeMaCoolDownTask.resumeThread();
+				return ResponseEntity.ok("Succesfully RESUMED ping heatmap cooldown process!\n");
+			}
+			else {
+				return ResponseEntity.ok("Ping heatmap cooldown process ALREADY STARTED or is suspended!\n");
+			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
+			logger.error("Exception while trying to (re)start the cooldown Thread!!\n");
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error occurred!!\n");
+			
 		}
 	}
 
 	@PostMapping("/stopcooldownpingheatmap")
 	public ResponseEntity<String> stopCooldownPiHeMa() {
 		try {
-			if((this.piHeMaCoolDownTask.getState()!=Thread.State.NEW) && 
-					(this.piHeMaCoolDownTask.getIsSuspended())) {
+			if ((this.piHeMaCoolDownTask.getState() != Thread.State.NEW)
+					&& (!this.piHeMaCoolDownTask.getIsSuspended())) {
 				this.piHeMaCoolDownTask.suspendThread();
 				logger.debug("************&&&&&&&&&&& coolDwonTask Thread SUSPENDED!!");
+				return ResponseEntity.ok("Ping heat cooldown process is now suspended!\n");
+			} else {
+				return ResponseEntity.ok("Pingheat cooldown process not started or ALREADY STOPPED!\n");
 			}
-			else {
-				return ResponseEntity.ok("Pingheat cooldown process already started! No operation performed.");
-			}
-			logger.debug("After interrupting this.pingHeMaCoWorkerThread. When is the exception thrown?");
-			return ResponseEntity.ok("Success");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred" + e.getMessage());
+			logger.error("Exception while trying to stop the cooldown Thread!!\n");
+			e.printStackTrace();
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error occurred!!\n" + e.getMessage());
 		}
 
 	}
@@ -268,5 +282,3 @@ public class PingHeatMapController {
 	}
 
 }
-
-
