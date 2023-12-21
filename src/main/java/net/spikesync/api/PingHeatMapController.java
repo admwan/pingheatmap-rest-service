@@ -1,7 +1,6 @@
 package net.spikesync.api;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.spikesync.pingerdaemonrabbitmqclient.PingEntry;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatData;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader;
-import net.spikesync.pingerdaemonrabbitmqclient.SilverCloud;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapUpdateTask;
@@ -39,14 +36,10 @@ public class PingHeatMapController {
 
 	@Autowired
 	private final PingHeatMap pingHeatMap;
-	private final PingMsgReader pingMsgReader;
 	private PingHeatMapCoolDownTask piHeMaCoolDownTask;
 	private PingHeatMapUpdateTask piHeMaUpdateTask;
-	//private Runnable pingHeMaUpRunnable;
-	private Thread pingHeMaCoWorkerThread;
 
 	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa, PingHeatMapUpdateTask piHeMaUpTa) {
-		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
 		piHeMaCoolDownTask = piHeMaCoDoTa;
 		piHeMaUpdateTask = piHeMaUpTa;
@@ -56,8 +49,7 @@ public class PingHeatMapController {
 	
 	@PostMapping("/startupdatepingheatmap")
 	public ResponseEntity<String> startUpdatePiHeMa() {
-		logger.debug(
-				"^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
+		logger.debug("Attempting to start pingHeatMapUpdateThread ...");
 		try {
 			if (this.piHeMaUpdateTask.getState() == Thread.State.NEW) {
 	
@@ -80,13 +72,11 @@ public class PingHeatMapController {
 	}
 	
 	
-	// Idem as the previous method: automatically executed on startup when
-	// @Autowired is present!
+	// Idem as the previous method: automatically executed on startup when @Autowired is present!
 	// @Autowired
 	@PostMapping("/startcooldownpingheatmap")
 	public ResponseEntity<String> startCooldownPingHeatMap() {
-		logger.debug(
-				"^^^^^^^^^^^^############^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapCooldownThread ...");
+		logger.debug("Attempting to start pingHeatMapCooldownThread ...");
 		try {
 			if (this.piHeMaCoolDownTask.getState() == Thread.State.NEW) {
 	
@@ -114,7 +104,7 @@ public class PingHeatMapController {
 			if ((this.piHeMaCoolDownTask.getState() != Thread.State.NEW)
 					&& (!this.piHeMaCoolDownTask.getIsSuspended())) {
 				this.piHeMaCoolDownTask.suspendThread();
-				logger.debug("************&&&&&&&&&&& coolDwonTask Thread SUSPENDED!!");
+				logger.debug("Ping coolDownTask Thread SUSPENDED!!");
 				return ResponseEntity.ok("Ping heat COOLDOWN process is now suspended!\n");
 			} else {
 				return ResponseEntity.ok("Pingheat COOLDOWN process not started or ALREADY STOPPED!\n");
@@ -134,7 +124,7 @@ public class PingHeatMapController {
 			if ((this.piHeMaUpdateTask.getState() != Thread.State.NEW)
 					&& (!this.piHeMaUpdateTask.getIsSuspended())) {
 				this.piHeMaUpdateTask.suspendThread();
-				logger.debug("************&&&&&&&&&&& pingUpdateHeatMap Thread SUSPENDED!!");
+				logger.debug("pingUpdateHeatMap Thread SUSPENDED!!");
 				return ResponseEntity.ok("PINGUPDATEHEATMAP process is now suspended!\n");
 			} else {
 				return ResponseEntity.ok("PINGUPDATEHEATMAP process not started or ALREADY STOPPED!\n");
