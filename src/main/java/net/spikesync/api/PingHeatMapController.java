@@ -26,6 +26,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloud;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask;
+import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapUpdateTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,79 +41,45 @@ public class PingHeatMapController {
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
 	private PingHeatMapCoolDownTask piHeMaCoolDownTask;
-	private Runnable pingHeMaUpRunnable;
+	private PingHeatMapUpdateTask piHeMaUpdateTask;
+	//private Runnable pingHeMaUpRunnable;
 	private Thread pingHeMaCoWorkerThread;
 
-	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa) {
+	public PingHeatMapController(PingMsgReader piMeRe, PingHeatMap piHeMa, PingHeatMapCoolDownTask piHeMaCoDoTa, PingHeatMapUpdateTask piHeMaUpTa) {
 		pingMsgReader = piMeRe;
 		pingHeatMap = piHeMa;
 		piHeMaCoolDownTask = piHeMaCoDoTa;
-		pingHeMaUpRunnable = new Runnable() {
-			@Override
-			public void run() {
-				readRmqUpdatePiHeMa();
-			}
-		};
+		piHeMaUpdateTask = piHeMaUpTa;
+		
 	}
 
-	public void readRmqUpdatePiHeMa() {
-
-		logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
-
-		// In this project everything needed by PingMsgReader is injected at
-		// bean-construction time, so it is ready to be used!
-		boolean connectionEstablished = false;
-
-		while (true) {
-			try {
-				connectionEstablished = this.pingMsgReader.connectPingMQ();
-
-			} catch (Exception ce) {
-				logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
-			}
-			if (connectionEstablished) {
-				ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
-				if ((newPingEntries != null) && !newPingEntries.isEmpty())
-					this.pingHeatMap.setPingHeat(newPingEntries);
-				else
-					logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
-			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				logger.error(
-						"Exception during sleep of Thread running pingMsgReader.createPingEntriesFromRabbitMqMessages() !!");
-				e.printStackTrace();
-			}
-
-		}
-	}
-
-	public void cooldownPingHeatMap() {
-		while (true) {
-			pingHeatMap.coolDownPingHeat();
-			pingHeatMap.printPingHeatMap();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				logger.debug(
-						"Caught an InterruptedException. This is not an error condition, but caused by the method ...");
-			}
-
-		}
-	}
-
-	// The following two methods that start the update threads are *automatically*
-	// called when creating an instance of this class! This only happens when
-	// annotated with @Autowired! TBD: HOW??
-	@Autowired
+	
 	@PostMapping("/startupdatepingheatmap")
-	public void startUpdatePiHeMa() {
+	public ResponseEntity<String> startUpdatePiHeMa() {
 		logger.debug(
 				"^^^^^^^^^^^^&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Attempting to start pingHeatMapUpdateThread ...");
-		new Thread(this.pingHeMaUpRunnable).start();
+		try {
+			if (this.piHeMaUpdateTask.getState() == Thread.State.NEW) {
+	
+				this.piHeMaUpdateTask.start();
+				return ResponseEntity.ok("Succesfully STARTED ping heatmap UPDATE process!\n");
+			}
+			else if (this.piHeMaUpdateTask.getIsSuspended()) {
+				this.piHeMaUpdateTask.resumeThread();
+				return ResponseEntity.ok("Succesfully RESUMED ping heatmap UPDATE process!\n");
+			}
+			else {
+				return ResponseEntity.ok("Ping heatmap UPDATE process ALREADY STARTED and is NOT SUSPENDED!\n");
+			}
+		} catch (Exception e) {
+			logger.error("Exception while trying to (re)start the cooldown Thread!!\n");
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error occurred!!\n");
+			
+		}
 	}
-
+	
+	
 	// Idem as the previous method: automatically executed on startup when
 	// @Autowired is present!
 	// @Autowired
@@ -124,14 +91,14 @@ public class PingHeatMapController {
 			if (this.piHeMaCoolDownTask.getState() == Thread.State.NEW) {
 	
 				this.piHeMaCoolDownTask.start();
-				return ResponseEntity.ok("Succesfully STARTED ping heatmap cooldown process!\n");
+				return ResponseEntity.ok("Succesfully STARTED ping heatmap COOLDOWN process!\n");
 			}
 			else if (this.piHeMaCoolDownTask.getIsSuspended()) {
 				this.piHeMaCoolDownTask.resumeThread();
-				return ResponseEntity.ok("Succesfully RESUMED ping heatmap cooldown process!\n");
+				return ResponseEntity.ok("Succesfully RESUMED ping heatmap COOLDOWN process!\n");
 			}
 			else {
-				return ResponseEntity.ok("Ping heatmap cooldown process ALREADY STARTED or is suspended!\n");
+				return ResponseEntity.ok("Ping heatmap cooldown process ALREADY STARTED and is not SUSPENDED!\n");
 			}
 		} catch (Exception e) {
 			logger.error("Exception while trying to (re)start the cooldown Thread!!\n");
@@ -148,12 +115,12 @@ public class PingHeatMapController {
 					&& (!this.piHeMaCoolDownTask.getIsSuspended())) {
 				this.piHeMaCoolDownTask.suspendThread();
 				logger.debug("************&&&&&&&&&&& coolDwonTask Thread SUSPENDED!!");
-				return ResponseEntity.ok("Ping heat cooldown process is now suspended!\n");
+				return ResponseEntity.ok("Ping heat COOLDOWN process is now suspended!\n");
 			} else {
-				return ResponseEntity.ok("Pingheat cooldown process not started or ALREADY STOPPED!\n");
+				return ResponseEntity.ok("Pingheat COOLDOWN process not started or ALREADY STOPPED!\n");
 			}
 		} catch (Exception e) {
-			logger.error("Exception while trying to stop the cooldown Thread!!\n");
+			logger.error("Exception while trying to stop the COOLDOWN Thread!!\n");
 			e.printStackTrace();
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error occurred!!\n" + e.getMessage());

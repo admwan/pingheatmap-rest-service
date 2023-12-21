@@ -31,6 +31,11 @@
 		<constructor-arg index="3" ref="silverCloudQueue"/>
 	</bean>
 
+	<bean id="piHeMaUpdateTask" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapUpdateTask">
+		<constructor-arg index="0" ref="pingHeatMap"/>
+		<constructor-arg index="1" ref="pingMsgReader"/>
+	</bean>
+
 	<bean id="pingHeatMapController" class="net.spikesync.api.PingHeatMapController">
 		<constructor-arg index="0" ref="pingMsgReader"/>
 		<constructor-arg index="1" ref="pingHeatMap"/>

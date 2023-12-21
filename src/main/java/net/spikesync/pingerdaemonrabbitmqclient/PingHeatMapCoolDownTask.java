@@ -18,13 +18,13 @@ public class PingHeatMapCoolDownTask extends Thread {
 	
 	public synchronized void suspendThread() {
 		isSuspended = true;
-		logger.debug("Cooldown Thread SUSPENDED!");
+		logger.debug("Ping heatmap COOLDOWN Thread SUSPENDED!");
 
 	}
 
 	public synchronized void resumeThread() {
 		isSuspended = false;
-		logger.debug("Cooldown Thread RESUMED!");
+		logger.debug("Ping heatmap COOLDOWN Thread RESUMED!");
 		notify(); // Notify waiting threads
 	}
 
@@ -35,7 +35,7 @@ public class PingHeatMapCoolDownTask extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			logger.debug("Cooldown Thread STARTED!");
+			logger.debug("Ping heatmap COOLDOWN Thread STARTED!");
 			try {
 				synchronized (this) {
 					while (isSuspended) {
