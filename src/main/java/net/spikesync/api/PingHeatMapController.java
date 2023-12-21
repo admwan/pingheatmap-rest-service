@@ -128,6 +128,26 @@ public class PingHeatMapController {
 
 	}
 
+	@PostMapping("/stopupdatepingheatmap")
+	public ResponseEntity<String> stopUpdatePiHeMa() {
+		try {
+			if ((this.piHeMaUpdateTask.getState() != Thread.State.NEW)
+					&& (!this.piHeMaUpdateTask.getIsSuspended())) {
+				this.piHeMaUpdateTask.suspendThread();
+				logger.debug("************&&&&&&&&&&& pingUpdateHeatMap Thread SUSPENDED!!");
+				return ResponseEntity.ok("PINGUPDATEHEATMAP process is now suspended!\n");
+			} else {
+				return ResponseEntity.ok("PINGUPDATEHEATMAP process not started or ALREADY STOPPED!\n");
+			}
+		} catch (Exception e) {
+			logger.error("Exception while trying to stop the PINGUPDATEHEATMAP Thread!!\n");
+			e.printStackTrace();
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error occurred!!\n" + e.getMessage());
+		}
+
+	}
+
 	@Autowired
 	@PostMapping("/pingheatmap")
 	public HashMap<SilverCloudNode, HashMap<SilverCloudNode, PingHeatData>> getPingHeatMap() {

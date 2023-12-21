@@ -18,10 +18,10 @@ public class PingHeatMapUpdateTask extends Thread {
 		this.pingHeatMap = piHeMa;
 		this.pingMsgReader = piMsRe;
 	}
-	
+
 	public synchronized void suspendThread() {
 		isSuspended = true;
-		logger.debug("Cooldown Thread SUSPENDED!");
+		logger.debug("Ping UPDATE Thread SUSPENDED!");
 
 	}
 
@@ -34,7 +34,7 @@ public class PingHeatMapUpdateTask extends Thread {
 	public boolean getIsSuspended() {
 		return this.isSuspended;
 	}
-	
+
 	public void readRmqUpdatePiHeMa() {
 
 		logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
@@ -43,31 +43,21 @@ public class PingHeatMapUpdateTask extends Thread {
 		// bean-construction time, so it is ready to be used!
 		boolean connectionEstablished = false;
 
-		while (true) {
-			try {
-				connectionEstablished = this.pingMsgReader.connectPingMQ();
+		try {
+			connectionEstablished = this.pingMsgReader.connectPingMQ();
 
-			} catch (Exception ce) {
-				logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
-			}
-			if (connectionEstablished) {
-				ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
-				if ((newPingEntries != null) && !newPingEntries.isEmpty())
-					this.pingHeatMap.setPingHeat(newPingEntries);
-				else
-					logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
-			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				logger.error(
-						"Exception during sleep of Thread running pingMsgReader.createPingEntriesFromRabbitMqMessages() !!");
-				e.printStackTrace();
-			}
-
+		} catch (Exception ce) {
+			logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
+		}
+		if (connectionEstablished) {
+			ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
+			if ((newPingEntries != null) && !newPingEntries.isEmpty())
+				this.pingHeatMap.setPingHeat(newPingEntries);
+			else
+				logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
 		}
 	}
-	
+
 	@Override
 	public void run() {
 		while (true) {
