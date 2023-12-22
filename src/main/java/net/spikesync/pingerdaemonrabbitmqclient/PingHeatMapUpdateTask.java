@@ -54,7 +54,7 @@ public class PingHeatMapUpdateTask extends Thread {
 			if ((newPingEntries != null) && !newPingEntries.isEmpty())
 				this.pingHeatMap.setPingHeat(newPingEntries);
 			else
-				logger.debug("newPingEntries is null or empty! Not creating any new PingEntry's!!!!!");
+				logger.debug("newPingEntries is null or empty! Not creating any new PingEntry objects!!!!!");
 		}
 	}
 
