@@ -86,13 +86,10 @@ public class PingHeatMapUpdateTask extends Thread implements ApplicationContextA
 				}
 				readRmqUpdatePiHeMa();
 				/*
-				 * Get the status of the pingheatmap cooldown task. If it is active, don't print
-				 * the pinghaeatmap here!
+				 * The if clause belos contains: get the status of the pingheatmap cooldown task through its bean in the context. 
+				 * If it is active, don't print the pingheatmap because then it is printed in the pingheat cooldown bean.
 				 */
-				PingHeatMapCoolDownTask piHeMaCoDoTa = (PingHeatMapCoolDownTask) applicationContext
-						.getBean(PingHeatMapCoolDownTask.class);
-				isCoolDownTaskSuspended = piHeMaCoDoTa.getIsSuspended();
-				if (isCoolDownTaskSuspended) {
+				if (applicationContext.getBean(PingHeatMapCoolDownTask.class).getIsSuspended()) {
 					logger.debug("Now printing PingHeatMap in PingHeatMap after calling readRmqUpdatePiHeMa() AND cooldown is not running!");
 					pingHeatMap.printPingHeatMap();
 				} else

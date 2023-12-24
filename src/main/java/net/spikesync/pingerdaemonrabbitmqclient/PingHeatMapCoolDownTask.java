@@ -51,6 +51,7 @@ public class PingHeatMapCoolDownTask extends Thread implements ApplicationContex
 						wait();
 					}
 				}
+				logger.debug("Printing ping heatmap form PingHeatMapCoolDown process!");
 				pingHeatMap.coolDownPingHeat();
 				pingHeatMap.printPingHeatMap();
 				Thread.sleep(2000);
