@@ -2,22 +2,34 @@ package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public class PingHeatMapUpdateTask extends Thread {
+public class PingHeatMapUpdateTask extends Thread implements ApplicationContextAware {
 
 	@Autowired
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
 
+	private ApplicationContext applicationContext;
+
 	private boolean connectionEstablished = false;
 	private volatile boolean isSuspended = false;
+	private volatile boolean isCoolDownTaskSuspended = false;
 
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapUpdateTask.class);
 
 	public PingHeatMapUpdateTask(PingHeatMap piHeMa, PingMsgReader piMsRe) {
 		this.pingHeatMap = piHeMa;
 		this.pingMsgReader = piMsRe;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext appCtx) throws BeansException {
+		this.applicationContext = appCtx;
+
 	}
 
 	public synchronized void suspendThread() {
@@ -57,8 +69,7 @@ public class PingHeatMapUpdateTask extends Thread {
 				this.pingHeatMap.setPingHeat(newPingEntries);
 			else
 				logger.debug("newPingEntries is null or empty! Not creating any new PingEntry objects!!!!!");
-		}
-		else {
+		} else {
 			logger.error("No connection to RabbitMQ established, even after trying, and no Exception occurred!");
 		}
 	}
@@ -74,8 +85,19 @@ public class PingHeatMapUpdateTask extends Thread {
 					}
 				}
 				readRmqUpdatePiHeMa();
-				logger.debug("Now printing PingHeatMap in PingHeatMap after clling readRmqUpdatePiHeMa()");
-				pingHeatMap.printPingHeatMap();
+				/*
+				 * Get the status of the pingheatmap cooldown task. If it is active, don't print
+				 * the pinghaeatmap here!
+				 */
+				PingHeatMapCoolDownTask piHeMaCoDoTa = (PingHeatMapCoolDownTask) applicationContext
+						.getBean(PingHeatMapCoolDownTask.class);
+				isCoolDownTaskSuspended = piHeMaCoDoTa.getIsSuspended();
+				if (isCoolDownTaskSuspended) {
+					logger.debug("Now printing PingHeatMap in PingHeatMap after clling readRmqUpdatePiHeMa()");
+					pingHeatMap.printPingHeatMap();
+				} else
+					logger.debug(
+							"Pingheat Cooldown task is active; not printing PingHeatMap table (avoiding duplicate.");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
