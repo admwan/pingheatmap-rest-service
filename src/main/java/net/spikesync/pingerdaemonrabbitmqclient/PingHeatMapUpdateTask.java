@@ -10,6 +10,7 @@ public class PingHeatMapUpdateTask extends Thread {
 	private final PingHeatMap pingHeatMap;
 	private final PingMsgReader pingMsgReader;
 
+	private boolean connectionEstablished = false;
 	private volatile boolean isSuspended = false;
 
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapUpdateTask.class);
@@ -37,24 +38,28 @@ public class PingHeatMapUpdateTask extends Thread {
 
 	public void readRmqUpdatePiHeMa() {
 
-		logger.debug("Now starting listener with devPingApp..connectPingMQ(context) --------------------**********");
+		logger.debug("In readRmqUpdatPiHeMa()  -------------- part of PingHeatMapUpdateTask.");
 
 		// In this project everything needed by PingMsgReader is injected at
 		// bean-construction time, so it is ready to be used!
-		boolean connectionEstablished = false;
 
-		try {
-			connectionEstablished = this.pingMsgReader.connectPingMQ();
+		if (!connectionEstablished) {
+			try {
+				connectionEstablished = this.pingMsgReader.connectPingMQ();
 
-		} catch (Exception ce) {
-			logger.error("Connection with RabbitMQ failed! Is the RabbitMQ service running?");
-		}
-		if (connectionEstablished) {
+			} catch (Exception ce) {
+				logger.error("Connection with RabbitMQ failed!! Is the RabbitMQ service running?\n"
+						+ "NOT updating PingHeat matrix!!");
+			}
+		} else if (connectionEstablished) {
 			ArrayList<PingEntry> newPingEntries = this.pingMsgReader.createPingEntriesFromRabbitMqMessages();
 			if ((newPingEntries != null) && !newPingEntries.isEmpty())
 				this.pingHeatMap.setPingHeat(newPingEntries);
 			else
 				logger.debug("newPingEntries is null or empty! Not creating any new PingEntry objects!!!!!");
+		}
+		else {
+			logger.error("No connection to RabbitMQ established, even after trying, and no Exception occurred!");
 		}
 	}
 
@@ -69,6 +74,7 @@ public class PingHeatMapUpdateTask extends Thread {
 					}
 				}
 				readRmqUpdatePiHeMa();
+				logger.debug("Now printing PingHeatMap in PingHeatMap after clling readRmqUpdatePiHeMa()");
 				pingHeatMap.printPingHeatMap();
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
