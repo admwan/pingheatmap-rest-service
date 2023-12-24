@@ -97,7 +97,7 @@ public class PingHeatMapUpdateTask extends Thread implements ApplicationContextA
 					pingHeatMap.printPingHeatMap();
 				} else
 					logger.debug(
-							"Pingheat Cooldown task is active; not printing PingHeatMap table (avoiding duplicate.");
+							"Pingheat Cooldown task is active; not printing PingHeatMap table (avoiding duplicate).");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
