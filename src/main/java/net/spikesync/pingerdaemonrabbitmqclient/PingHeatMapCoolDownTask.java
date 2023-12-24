@@ -1,14 +1,17 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-
-public class PingHeatMapCoolDownTask extends Thread {
+public class PingHeatMapCoolDownTask extends Thread implements ApplicationContextAware {
 
 	@Autowired
 	private final PingHeatMap pingHeatMap;
-
-	private volatile boolean isSuspended = false;
+	private ApplicationContext applicationContext;
+	
+	private volatile boolean isSuspended = true; // This task is not running when it is created; only after run() is
+													// called for the first time and after resuming!
 
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapCoolDownTask.class);
 
@@ -16,6 +19,11 @@ public class PingHeatMapCoolDownTask extends Thread {
 		this.pingHeatMap = piHeMa;
 	}
 	
+	@Override
+	public void setApplicationContext(ApplicationContext appCtx) {
+		this.applicationContext = appCtx;
+	}
+
 	public synchronized void suspendThread() {
 		isSuspended = true;
 		logger.debug("Ping heatmap COOLDOWN Thread SUSPENDED!");
@@ -31,11 +39,12 @@ public class PingHeatMapCoolDownTask extends Thread {
 	public boolean getIsSuspended() {
 		return this.isSuspended;
 	}
-	
+
 	@Override
 	public void run() {
+		logger.debug("Ping heatmap COOLDOWN Thread STARTED!");
+		this.isSuspended = false;
 		while (true) {
-			logger.debug("Ping heatmap COOLDOWN Thread STARTED!");
 			try {
 				synchronized (this) {
 					while (isSuspended) {
@@ -44,7 +53,7 @@ public class PingHeatMapCoolDownTask extends Thread {
 				}
 				pingHeatMap.coolDownPingHeat();
 				pingHeatMap.printPingHeatMap();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -171,7 +171,7 @@ public class PingHeatMap {
 			// int countCells = 0;
 			for (Entry<SilverCloudNode, PingHeatData> colNode : rowNode.getValue().entrySet()) {
 				// ++countCells;
-				logger.debug("pingHeat of pair after cool-down: (" + rowNode.getKey().getNodeName() + ", "
+				logger.debug("pingHeat of pair (" + rowNode.getKey().getNodeName() + ", "
 						+ colNode.getKey().getNodeName() + "): " + colNode.getValue().getPingHeat());
 				// + " --- cellCounter: " + countCells);
 			}

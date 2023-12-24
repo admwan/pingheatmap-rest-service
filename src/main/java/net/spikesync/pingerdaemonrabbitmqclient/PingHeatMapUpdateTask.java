@@ -76,8 +76,8 @@ public class PingHeatMapUpdateTask extends Thread implements ApplicationContextA
 
 	@Override
 	public void run() {
+		logger.debug("Ping heatmap UPDATE Thread STARTED!");
 		while (true) {
-			logger.debug("Ping heatmap UPDATE Thread STARTED!");
 			try {
 				synchronized (this) {
 					while (isSuspended) {
@@ -93,12 +93,12 @@ public class PingHeatMapUpdateTask extends Thread implements ApplicationContextA
 						.getBean(PingHeatMapCoolDownTask.class);
 				isCoolDownTaskSuspended = piHeMaCoDoTa.getIsSuspended();
 				if (isCoolDownTaskSuspended) {
-					logger.debug("Now printing PingHeatMap in PingHeatMap after clling readRmqUpdatePiHeMa()");
+					logger.debug("Now printing PingHeatMap in PingHeatMap after calling readRmqUpdatePiHeMa() AND cooldown is not running!");
 					pingHeatMap.printPingHeatMap();
 				} else
 					logger.debug(
 							"Pingheat Cooldown task is active; not printing PingHeatMap table (avoiding duplicate.");
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
