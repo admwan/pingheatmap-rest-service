@@ -13,9 +13,9 @@ INCLUDED!! -->
 	</parent>
 
 	<groupId>net.spikesync</groupId>
-	<artifactId>pingerdaemon-rabbitmq-client</artifactId>
+	<artifactId>pingheatmap-rest-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pingerdaeomon-rabbitmq-client</name>
+	<name>pingheatmap-rest-service</name>
 	<description>VM SilverCloud pinger with RabbitMQ CLient</description>
 	<properties>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
