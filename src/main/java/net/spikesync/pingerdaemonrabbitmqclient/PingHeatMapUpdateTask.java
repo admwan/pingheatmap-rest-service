@@ -17,7 +17,6 @@ public class PingHeatMapUpdateTask extends Thread implements ApplicationContextA
 
 	private boolean connectionEstablished = false;
 	private volatile boolean isSuspended = false;
-	private volatile boolean isCoolDownTaskSuspended = false;
 
 	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PingHeatMapUpdateTask.class);
 
