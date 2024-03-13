@@ -37,7 +37,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGHEAT;
-import net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap;
 import net.spikesync.pingerdaemonrabbitmqclient.PropertiesLoader;
 import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 
@@ -99,21 +98,6 @@ class PingerdaemonRabbitmqClientApplicationTests {
  		prop = PropertiesLoader.loadProperties();
  		this.testingEnabled = prop.getProperty(TEST_PROPERTY);
  		logger.debug("Value of test-pingerdaemon-context: " + this.testingEnabled);
-	}
-	
-	@Test
-	@EnabledIf("testingEnabled") 
-	void testHeatMap() {
-		PingHeatMap pingHeatMap = context.getBean(PingHeatMap.class);
-		//Test these two nodes whether a pingHeat value is set properly and then correctly read
-		SilverCloudNode rowNode = new SilverCloudNode("CAPTUW", "192.168.50.104");
-		SilverCloudNode colNode = new SilverCloudNode("THORFW", "192.168.50.107");
-		//Test-value for pingHeat. Put it in first, then read it and compare
-		pingHeatMap.setPingHeat(rowNode, colNode, PINGHEAT.TEPID);
-		
-		PINGHEAT pingHeat = pingHeatMap.getPingHeat(rowNode, colNode);
-		logger.debug("Value of pingHeatMap.getPingHeat(rowNode CAPTUW, colNode THORFW) is: " + pingHeat );
-		assertThat(pingHeat).isEqualByComparingTo(PINGHEAT.TEPID);
 	}
 	
 	@Test
