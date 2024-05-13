@@ -179,6 +179,8 @@ public class PingHeatMap {
 		logger.debug(" --------------------------------------------------------------------------------------------- ");
 	}
 
+	
+	/* This is the method that prepares the PingHeatMap for JSON transfor to the endpoint caller */
 	public ArrayList<SimplePingHeat> getPiHeMaAsSimplePingHeatList() {
 		ArrayList<SimplePingHeat> pingHeMaPiEnLi = new ArrayList<SimplePingHeat> ();
 		
