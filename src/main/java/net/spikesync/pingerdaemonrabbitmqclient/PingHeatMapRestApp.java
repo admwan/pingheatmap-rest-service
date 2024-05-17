@@ -22,6 +22,7 @@ public class PingHeatMapRestApp {
 
 	public static void main(String[] args) {
 
+		logger.debug("Starting PingHeatMapRestApp-main");
 		Properties prop = PropertiesLoader.loadProperties();
 		if (prop == null)
 			logger.debug(
