@@ -173,6 +173,7 @@ public class PingHeatMapController {
 		return jsonPiHeMa;
 	}
 
+	/* This is the endpoint called by the HTML/JS in project js-fetch-pingheatmap */
 	@Autowired
 	@CrossOrigin(origins = { "http://localhost:8000" })
 	@GetMapping("/plainjsonpingheatmap")

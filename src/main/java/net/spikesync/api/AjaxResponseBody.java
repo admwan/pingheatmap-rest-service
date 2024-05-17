@@ -2,12 +2,13 @@ package net.spikesync.api;
 
 import java.util.ArrayList;
 
+/* Class to encapsulate the various datastructures necessary for rendering the PingHeatMap in an HTML table */
 public class AjaxResponseBody {
 
     String msg;
     
     /* The PingHeat matrix has the dimensions pingNodeList.size() x pingNodeList.size() and consists of the Node Names
-     * as both the rows as the columns. The pngMatrixData kan therefore be linear because it consists of exactly 
+     * as both the rows as the columns. The pngMatrixData can therefore be linear because it consists of exactly 
      * the values of the squared (row,column) elements.
      */
     
