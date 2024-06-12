@@ -36,9 +36,14 @@ public class AjaxResponseBody {
        this.msg = msg;
    }
    
-
     public void setPingMatrixData(ArrayList<SimplePingHeat> pingMatrixD) {
         this.pingMatrixData = pingMatrixD;
     }
 
+    
+    //THIS IS A DUMMY AND OBVIOUSLY NO JSON!!!!!!!!!
+    @Override
+    public String toString() {
+    	return this.msg + this.pingNodeList.toString() + this.pingMatrixData.toString();
+    }
 }
