@@ -4,7 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring Framework, 
+	<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring
+	Framework, 
 		NO Spring Boot!! In deze versie staat GEEN parent! In de andere versie is 
 		org.springframework.boot de parent, hier dus opzettelijk niet!! -->
 
@@ -20,7 +21,8 @@
 
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -28,54 +30,36 @@
 		</dependency>
 
 
-	<!-- OUDE SLF4J met OUDE Log4J !!!!!!!!!!! -->
-	<!-- 
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.0</version>
-   </dependency>
- 
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.0</version>
-   </dependency>
-
-   <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-   </dependency>
-	-->
-
-	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic This 
-		dependency pulls in slf4j-api!!! See: https://mkyong.com/logging/slf4j-logback-tutorial/ -->
-	<dependency>
-		<groupId>ch.qos.logback</groupId>
-		<artifactId>logback-classic</artifactId>
-		<version>1.4.11</version>
-	</dependency>
+		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+		This 
+		dependency pulls in slf4j-api!!! See:
+		https://mkyong.com/logging/slf4j-logback-tutorial/ -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.4.11</version>
+		</dependency>
 
 
-	<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
+		<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
 		te maken met een RabbitMQ server Dit zijn andere dependencies dan in de POM 
 		met Spring-Boot!! -->
-	<dependency>
-		<groupId>com.rabbitmq</groupId>
-		<artifactId>amqp-client</artifactId>
-		<version>5.7.3</version>
-	</dependency>
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>5.7.3</version>
+		</dependency>
 
 
-	<dependency>
-		<groupId>org.springframework.amqp</groupId>
-		<artifactId>spring-rabbit</artifactId>
-		<version>3.0.9</version>
-	</dependency>
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+			<version>3.0.9</version>
+		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit-test -->
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
@@ -83,7 +67,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!--
+		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -132,11 +117,73 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- the configuration element must be OUTSIDE the element executions!! -->
+					<!-- the configuration element must be OUTSIDE the element
+					executions!! -->
 				</plugin>
+
 
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<!-- Optionally disable the dependency-reduced POM -->
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<!-- Set the main class in the manifest -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>
+										net.spikesync.pingerdaemonrabbitmqclient.PingDaemon
+									</mainClass>
+								</transformer>
+								<!-- Merge Spring metadata to ensure namespace
+								handlers are available -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.handlers</resource>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.schemas</resource>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- other plugins -->
+		</plugins>
 	</build>
-
 </project>
+
+<!-- OUDE SLF4J met OUDE Log4J !!!!!!!!!!! -->
+<!--
+   <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.0</version>
+   </dependency>
+
+   <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.0</version>
+   </dependency>
+
+   <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+   </dependency>
+        -->
+
