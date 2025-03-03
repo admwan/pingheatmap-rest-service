@@ -1,60 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- POM WITH/INCLUDING org.springframework.boot parent element!! Spring Boot
+INCLUDED!! -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<!-- POM WITHOUT org.springframework.boot parent element! ONLY Spring
-	Framework, 
-		NO Spring Boot!! In deze versie staat GEEN parent! In de andere versie is 
-		org.springframework.boot de parent, hier dus opzettelijk niet!! -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.1.5</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
 
 	<groupId>net.spikesync</groupId>
-	<artifactId>pingerdaemon-rabbitmq-client</artifactId>
+	<artifactId>pingheatmap-rest-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pingerdaeomon-rabbitmq-client</name>
+	<name>pingheatmap-rest-service</name>
 	<description>VM SilverCloud pinger with RabbitMQ CLient</description>
 	<properties>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<java.version>17</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
 	</properties>
-
-
 	<dependencies>
-		<!--
-		https://mvnrepository.com/artifact/org.springframework/spring-context -->
+
+		<!-- Include devtools for hot deployment -->
+
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>6.0.11</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api
+		** validate form fields to Beans, e.g., @NotEmpty -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-		This 
-		dependency pulls in slf4j-api!!! See:
-		https://mkyong.com/logging/slf4j-logback-tutorial/ -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.4.11</version>
-		</dependency>
-
-
-		<!-- Hieronder staan TWEE dependencies die nodig zijn om een verbinding 
-		te maken met een RabbitMQ server Dit zijn andere dependencies dan in de POM 
-		met Spring-Boot!! -->
+		<!-- Hieronder staan DRIE dependencies die ALLEMAAL nodig zijn om een
+		verbinding te maken met een RabbitMQ server -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
-			<version>5.7.3</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit</artifactId>
-			<version>3.0.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 
+		This dependency pulls in slf4j-api!!! See:
+		https://mkyong.com/logging/slf4j-logback-tutorial/ -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
 		</dependency>
 
 
@@ -63,35 +87,20 @@
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
-			<version>3.0.8</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!--
-		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.1</version>
-			<scope>test</scope>
-		</dependency>
-
 
 		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.9.1</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.9.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -105,85 +114,63 @@
 						<release>17</release>
 					</configuration>
 				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
+
+
+<!-- Dependency on spring-context is not necessary if the project has
+		spring-boot-starter-parent as parent 
+		https://mvnrepository.com/artifact/org.springframework/spring-context 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.0.12</version>
+		</dependency> -->
+
+<!-- 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
 					<executions>
 						<execution>
-							<id>compile</id>
-							<phase>compile</phase>
 							<goals>
 								<goal>java</goal>
 							</goals>
 						</execution>
 					</executions>
-					<!-- the configuration element must be OUTSIDE the element
-					executions!! -->
+					<! - the configuration element must be OUTSIDE the element
+					executions!! - >
+					<configuration>
+						<mainClass>
+net.spikesync.pingerdaemonrabbitmqclient.PingerdaemonRabbitmqClientApplication</mainClass>
+					</configuration>
 				</plugin>
+-->
 
+<!-- Add SLF4J logger https://www.baeldung.com/slf4j-with-log4j2-logback 
+	 See also: https://howtodoinjava.com/log4j2/log4j2-with-slf4j/ -->
 
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.3.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<!-- Optionally disable the dependency-reduced POM -->
-							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<transformers>
-								<!-- Set the main class in the manifest -->
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>
-										net.spikesync.pingerdaemonrabbitmqclient.PingDaemon
-									</mainClass>
-								</transformer>
-								<!-- Merge Spring metadata to ensure namespace
-								handlers are available -->
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.handlers</resource>
-								</transformer>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.schemas</resource>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- other plugins -->
-		</plugins>
-	</build>
-</project>
+<!--   ALL THIS log4j CRAP IS UNNECESSARY just use logback-classic, that
+		works for both versions with or without the spring-boot parent! 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+ -->
 
-<!-- OUDE SLF4J met OUDE Log4J !!!!!!!!!!! -->
-<!--
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.0</version>
-   </dependency>
-
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.0</version>
-   </dependency>
-
-   <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-   </dependency>
-        -->
 

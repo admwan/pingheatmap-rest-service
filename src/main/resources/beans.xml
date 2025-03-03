@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	
+	xsi:schemaLocation=
+	"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 	http://www.springframework.org/schema/rabbit https://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
-
-	<bean id="pingDaemon"
-		class="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
-		<constructor-arg ref="silverCloud" />
-		<constructor-arg ref="pingMsgProducer"/>
-	</bean>
-
-	<bean id="silverCloud"
-		class="net.spikesync.pingerdaemonrabbitmqclient.SilverCloud">
+	<bean id="silverCloud" class="net.spikesync.pingerdaemonrabbitmqclient.SilverCloud">
 		<constructor-arg ref="scNodeIpMap" />
 	</bean>
-
-
-	<bean id="pingMsgProducer"
-		class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgProducer">
-		<constructor-arg index="0" ref="silverCloud" />
-		<constructor-arg index="1" ref="amqpTemplate" />
-		<constructor-arg index="2" ref="connectionFactory" />
-		<constructor-arg index="3" ref="silverCloudQueue" />
+	
+	<bean id="pingHeatMap" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap">
+		<constructor-arg ref="silverCloud"/>
+	</bean>
+	
+	<bean id="piHeMaCoolDownTaks" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask">
+		<constructor-arg ref="pingHeatMap"/>
+	</bean>
+	
+	<bean id="pingMsgReader" class="net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader">
+		<constructor-arg index="0" ref="pingHeatMap"/>
+		<constructor-arg index="1" ref="amqpTemplate"/>
+		<constructor-arg index="2" ref="connectionFactory"/>
+		<constructor-arg index="3" ref="silverCloudQueue"/>
 	</bean>
 
-	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
+	<bean id="piHeMaUpdateTask" class="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapUpdateTask">
+		<constructor-arg index="0" ref="pingHeatMap"/>
+		<constructor-arg index="1" ref="pingMsgReader"/>
+	</bean>
+
+	<bean id="pingHeatMapController" class="net.spikesync.api.PingHeatMapController">
+		<constructor-arg index="0" ref="pingMsgReader"/>
+		<constructor-arg index="1" ref="pingHeatMap"/>
+	</bean>
+
+ 
+<!-- 	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="SURFIE" value="192.168.50.100" />
 		<entry key="CAPTUW" value="192.168.50.104" />
@@ -41,20 +52,37 @@
 		<entry key="HYDRFS" value="192.168.50.116" />
 		<entry key="ASGAFS" value="192.168.50.119" />
 	</util:map>
-
+ -->
+ 
+ 	<util:map id="scNodeIpMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="java.lang.String">
+		<entry key="SURFIE" value="192.168.50.100" />
+		<entry key="CAPTUW" value="192.168.50.104" />
+		<entry key="THORFW" value="192.168.50.107" />
+		<entry key="LOKIFS" value="192.168.50.110" />
+		<entry key="ASGAFS" value="192.168.50.119" />		
+	</util:map>
+ 
+ 
 	<rabbit:connection-factory
-		id="connectionFactory" virtual-host="SilverSurfieRMQH" username="thor"
-		password="7{3>d7Tg0dMA" 
-		host="192.168.50.107" 
+		id="connectionFactory" 
+		virtual-host="SilverSurfieRMQH"
+		username="thor"
+		password="7{3>d7Tg0dMA"
+		host="192.168.50.107"
 		port="5672" />
 
 	<rabbit:template id="amqpTemplate"
 		connection-factory="connectionFactory" />
 
-	<rabbit:admin connection-factory="connectionFactory" />
-
-	<rabbit:queue id="silverCloudQueue"
+	<rabbit:admin 
+	connection-factory="connectionFactory" 
+	 />
+	 
+	 <rabbit:queue 
+		id="silverCloudQueue"
 		name="SilverSurfieRMQHpingQueue" 
-		durable="false" />
+		durable="false" 
+	/>
 
 </beans>

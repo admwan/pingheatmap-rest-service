@@ -9,16 +9,6 @@
     			<level>TRACE</level>
     		</filter>
     	</appender>
-   
-   	<appender name="pingDaemonAppender" class="ch.qos.logback.core.ConsoleAppender">
-    		<encoder>
-    			<Pattern>%d{HH:mm:ss.SSS} %c{0} - %msg %n
-    			</Pattern>
-    		</encoder>
-    		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-    			<level>DEBUG</level>
-    		</filter>
-    	</appender>
 
       	<appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
     		<File>c:/tmp/rest-demo.log</File>
@@ -48,24 +38,24 @@
     		</encoder>
       	</appender>
 
-  
-		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon">
-			<level value="DEBUG"/>
-			<!-- 			 -->
-			<appender-ref ref = "pingDaemonAppender"/>		
-	
-		</logger>
+    	<logger name="org.codingpedia" additivity="false">
+    	    <level value="INFO" />
+    		<appender-ref ref="dailyRollingFileAppender"/>
+    		<appender-ref ref="minuteRollingFileAppender"/>
+    		<appender-ref ref="consoleAppender" />
+    	</logger>
 
-		<logger name="net.spikesync.pingerdaemonrabbitmqclient.VmPinger">
-			<level value="INFO"/>			
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapRestApp">
+			<level value="DEBUG"/>			
 		</logger>
-		
-		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingMsgProducer">
-			<level value="INFO"/>			
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMap">
+			<level value="DEBUG"/>			
 		</logger>
-
-		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingEntry">
-			<level value="INFO"/>			
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingHeatMapCoolDownTask">
+			<level value="DEBUG"/>			
+		</logger>
+		<logger name="net.spikesync.pingerdaemonrabbitmqclient.PingMsgReader">
+			<level value="DEBUG"/>			
 		</logger>
 
     	<root>
