@@ -32,7 +32,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 @ContextConfiguration("classpath:beans.xml")
 public class SimpleJunit5Test {
 	
-	private static final Logger logger = LoggerFactory.getLogger(SimpleJunit5Test.class);
+	private static final Logger logger = LoggerFactory.getLogger(net.spikesync.pingerdeamonrabbitmqclient.SimpleJunit5Test.class);
 
 	@Autowired
 	private SilverCloud sc;

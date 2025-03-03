@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.args="SURFIE" -Dexec.mainClass="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon"
+mvn exec:java -Dexec.args="THORFW" -Dexec.mainClass="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon"
